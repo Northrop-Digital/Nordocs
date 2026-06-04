@@ -1,0 +1,15 @@
+---
+source: tests/fatfile.rs
+expression: composed
+---
+// === STATE ===
+{ "inputs": {} }
+
+// === TEMPLATE ===
+#let theme = (brand: blue)
+
+// === DOCUMENT ===
+#doc.update(())
+
+// === IMAGES ===
+// no images
