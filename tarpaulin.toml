@@ -1,0 +1,5 @@
+[default]
+out = ["Html", "Lcov"]
+timeout = "300s"
+fail-under = 80.0
+exclude-files = ["src/main.rs", "src/authoring/mod.rs", "src/schema/mod.rs"]

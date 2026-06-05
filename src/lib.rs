@@ -15,6 +15,7 @@
 //!   hash (STATE / TEMPLATE / DOCUMENT / IMAGES).
 //! - [`authoring`] — transactional read-validate-write over fat files.
 //! - [`schema`] — component/template input schema parsing and catalogue.
+//! - [`validation`] — schema-based validation for `.ndoc.typ` and `.md` documents.
 //! - [`model`] — shared domain types (nodes, inputs, IDs, manifests).
 //! - [`error`] — typed library errors.
 
@@ -27,5 +28,6 @@ pub mod markdown;
 pub mod model;
 pub mod schema;
 pub mod typst_world;
+pub mod validation;
 
 pub use error::{Error, Result};

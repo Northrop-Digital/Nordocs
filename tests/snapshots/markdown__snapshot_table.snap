@@ -1,0 +1,10 @@
+---
+source: tests/markdown.rs
+assertion_line: 28
+expression: convert(md)
+---
+#table(columns: 3, align: (left, center, right),
+  [Left],  [Center],  [Right],
+  [l1],  [c1],  [r1],
+  [l2],  [c2],  [r2],
+)

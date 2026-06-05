@@ -1,0 +1,5 @@
+---
+source: tests/ndoc.rs
+expression: doc.compose()
+---
+// ndoc document v1

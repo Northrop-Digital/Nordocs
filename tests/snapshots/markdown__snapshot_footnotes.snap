@@ -1,0 +1,6 @@
+---
+source: tests/markdown.rs
+assertion_line: 46
+expression: convert(md)
+---
+First reference#footnote[Footnote alpha.] and second#footnote[Footnote beta.].

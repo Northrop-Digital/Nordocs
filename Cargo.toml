@@ -19,6 +19,9 @@ clap = { version = "4", features = ["derive"] }
 anyhow = "1"
 thiserror = "2"
 
+# Content hashing (cross-run-stable per-entry fingerprints)
+blake3 = "1"
+
 # Serialization (JSON prelude / --json envelope / YAML frontmatter)
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -30,7 +33,7 @@ typst = "0.14"
 typst-library = "0.14"
 typst-syntax = "0.14"
 typst-pdf = "0.14"
-typst-kit = { version = "0.14", default-features = false, features = ["fonts"] }
+typst-kit = { version = "0.14", default-features = false, features = ["embed-fonts"] }
 typst-assets = { version = "0.14", features = ["fonts"] }
 comemo = "0.4"
 
@@ -41,6 +44,7 @@ comrak = "0.30"
 insta = "1"
 assert_cmd = "2"
 predicates = "3"
+tempfile = "3"
 
 [profile.release]
 opt-level = 3

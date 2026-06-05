@@ -1,0 +1,6 @@
+---
+source: tests/markdown.rs
+assertion_line: 40
+expression: convert(md)
+---
+Normal text and #strike[struck through] and back to normal.

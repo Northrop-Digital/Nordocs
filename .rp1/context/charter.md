@@ -47,3 +47,38 @@ The defining success measure for v1 is **correct end-to-end output**: a target s
 1. Embedding the native Typst crate proves impractical and forces a fallback to shelling out.
 2. Output fidelity regresses versus the C# tool.
 3. The redesigned CLI ends up harder to use than what it replaced.
+
+## Testing Guidelines
+All contributors and agents must follow these testing requirements. These apply to every PR and every feature branch.
+
+### Mandatory rules
+- `cargo test` must pass with zero failures before any commit lands.
+- `cargo clippy --all-targets` must report zero warnings before any commit lands.
+- No test may invoke an external `typst` binary — all rendering must go through the embedded compiler (`typst_world.rs` + `compiler.rs`).
+- `unwrap()` and `expect()` are forbidden outside `#[cfg(test)]` blocks in library code (i.e. everything under `src/` except test modules). Use `anyhow`/`thiserror` error propagation instead.
+
+### Test layer expectations
+
+| Layer | Tool | When required |
+|-------|------|---------------|
+| Unit tests | `cargo test` (`#[cfg(test)]` in-module) | Every public function in `src/` modules |
+| Snapshot tests | `insta` | Any Markdown-to-Typst or fat-file composed `.typ` output |
+| CLI E2E tests | `assert_cmd` + `predicates` | Every public `ndoc` command |
+| Release smoke test | `cargo build --release` + `assert_cmd` against `target/release/ndoc` | Added in P4; required before v1 tag |
+
+### Coverage target
+**Minimum: 80% line coverage**, enforced by `cargo tarpaulin` (config: `tarpaulin.toml`, output: HTML + Lcov). Install with `cargo install cargo-tarpaulin`. All public functions exposed via `lib.rs` modules must have at least one unit test. Snapshot tests must cover the happy path for every Markdown feature (tables, task lists, footnotes, strikethrough) that `markdown.rs` handles.
+
+### Snapshot review
+When `insta` snapshots change, review the diff carefully before accepting. A snapshot change is a signal to check whether the Typst output change is intentional. Never accept snapshot updates blindly.
+
+## Delivery Phase Plan
+
+**Current Phase Plan**: [charter-phase-plan.md](./charter-phase-plan.md)
+**Last Updated**: 2026-06-04
+
+### Phases
+- [P1: Core Render Pipeline](./charter-phase-plan.md#p1-core-render-pipeline)
+- [P2: Fat-File Authoring](./charter-phase-plan.md#p2-fat-file-authoring)
+- [P3: Schema Validation and Preview](./charter-phase-plan.md#p3-schema-validation-and-preview)
+- [P4: CLI Polish, Test Hardening, and Distribution](./charter-phase-plan.md#p4-cli-polish-test-hardening-and-distribution)

@@ -39,3 +39,26 @@ pub fn compile_to_pdf(main_source: &str) -> Result<Vec<u8>> {
 
     Ok(pdf)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::compile_to_pdf;
+    use crate::error::Error;
+
+    #[test]
+    fn compile_to_pdf_happy_path() {
+        let result = compile_to_pdf("Hello, Typst!").expect("valid source should compile to PDF");
+        assert!(!result.is_empty(), "PDF bytes should be non-empty");
+    }
+
+    #[test]
+    fn compile_to_pdf_invalid_source() {
+        let result = compile_to_pdf("#panic(\"forced compile error\")");
+        match result {
+            Err(Error::Compile(msg)) => {
+                assert!(!msg.is_empty(), "compile error message should be non-empty")
+            }
+            other => panic!("expected Error::Compile, got {:?}", other),
+        }
+    }
+}

@@ -1,0 +1,11 @@
+---
+source: tests/ndoc.rs
+expression: doc.compose()
+---
+// ndoc document v1
+// === NDOC-ENTRY: hero kind=component hash=0ec0fdfed974272a01949573f1b03077a1351484eea194fcdc26ee2a8219cf1d ===
+#let hero = ()
+// === NDOC-END: hero ===
+// === NDOC-ENTRY: page kind=template hash=7cbf8e154d92b335f0a632cc4690930f947ec6b4244bdf8da5d57c250043a930 ===
+#let page = ()
+// === NDOC-END: page ===

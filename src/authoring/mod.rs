@@ -7,6 +7,11 @@
 //! Each mutation reads the current fat file, applies the change to the in-memory
 //! [`Document`] model, validates the result, and only then re-composes and
 //! writes — so a failed validation never leaves a half-written document.
+//!
+//! The [`ndoc`] sub-module provides the transactional helpers for the P2
+//! document authoring commands (`ndoc new`, `ndoc add`, `ndoc edit`).
+
+pub mod ndoc;
 
 use crate::error::Result;
 use crate::model::Document;

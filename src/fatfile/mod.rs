@@ -1,16 +1,17 @@
-//! The self-contained `.ndoc.typ` "fat file".
+//! The self-contained `.ndoc.typ` fat file and the `ndoc` document format.
 //!
-//! A fat file bundles everything needed to render a document into one `.typ`:
+//! Two distinct formats live here:
 //!
-//! - `STATE` — JSON prelude: document inputs, per-node component inputs, and the
-//!   images manifest.
-//! - `TEMPLATE` — the theme variables plus component function definitions.
-//! - `DOCUMENT` — `doc.update(...)` plus the component call tree.
-//! - `IMAGES` — embedded image payloads referenced by the manifest.
+//! - The original **fat file** (this module) — four fixed sections
+//!   (STATE / TEMPLATE / DOCUMENT / IMAGES) for the render pipeline.
+//! - The **ndoc document** ([`ndoc`]) — a variable list of named entries
+//!   (components/templates) for the P2 document authoring commands.
 //!
-//! This module composes those sections into a single source string, extracts
-//! them back out, and hashes for change detection. Ported from the C#
-//! `FatFileService`.
+//! Both formats target `.ndoc.typ` files but use distinct marker prefixes
+//! (`// === STATE ===` vs `// === NDOC-ENTRY: ...`) so they cannot be confused
+//! during parsing.
+
+pub mod ndoc;
 
 use crate::error::Result;
 
@@ -57,6 +58,7 @@ pub fn compose(sections: &FatFileSections) -> Result<String> {
 ///
 /// Uses the standard-library hasher for the skeleton; swap for a cryptographic
 /// digest if cross-run stability across toolchains is required.
+// TODO: P3 — replace DefaultHasher with blake3 for cross-run stability.
 pub fn content_hash(composed: &str) -> u64 {
     use std::hash::{Hash, Hasher};
     let mut hasher = std::collections::hash_map::DefaultHasher::new();

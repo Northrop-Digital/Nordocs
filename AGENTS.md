@@ -19,10 +19,23 @@ cargo build            # must stay green
 cargo test             # unit + insta snapshots + assert_cmd CLI tests
 cargo clippy --all-targets   # lints; keep warnings at zero where practical
 cargo fmt              # rustfmt (see rustfmt.toml, 100-col)
+cargo tarpaulin        # coverage; config in tarpaulin.toml; 80% minimum (install: cargo install cargo-tarpaulin)
 ```
 
 When you change snapshot-tested output, review and accept with
 `cargo insta review` (do not blindly accept).
+
+## ndoc CLI commands
+
+```sh
+ndoc build <file.ndoc.typ>    # compile fat file to PDF
+ndoc render <file.typ>        # compile raw Typst to PDF
+ndoc validate <file>          # validate .ndoc.typ or .md file; exits 1 with violations on failure
+ndoc preview <file>           # render to temp PDF and open in OS default viewer
+```
+
+Set `NDOC_NO_OPEN=1` to skip viewer spawn in headless/CI environments (PDF is still
+rendered and verified non-empty).
 
 ## Layout & where things go
 
@@ -35,6 +48,7 @@ When you change snapshot-tested output, review and accept with
   DOCUMENT / IMAGES).
 - `src/authoring/`   — transactional read-validate-write over fat files.
 - `src/schema/`      — component/template input schemas + catalogue.
+- `src/validation.rs` — schema-based validation for `.ndoc.typ` and `.md` documents.
 - `src/model.rs`     — shared domain types.
 - `tests/`           — integration tests.
 

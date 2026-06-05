@@ -129,3 +129,43 @@ impl World for NorthdocWorld {
         Some(Datetime::from_ymd(1970, 1, 1).expect("epoch is a valid date"))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::NorthdocWorld;
+    use typst::foundations::Bytes;
+    use typst::World;
+
+    #[test]
+    fn world_new_has_main_source() {
+        let world = NorthdocWorld::new("Hello, world!");
+        let source = world
+            .source(world.main())
+            .expect("main source should exist");
+        assert_eq!(source.text(), "Hello, world!");
+    }
+
+    #[test]
+    fn world_insert_file_round_trip() {
+        let mut world = NorthdocWorld::new("");
+        let data = Bytes::new(b"binary content".to_vec());
+        let id = world.insert_file("asset.bin", data.clone());
+        let retrieved = world.file(id).expect("inserted file should be retrievable");
+        assert_eq!(retrieved.as_slice(), data.as_slice());
+    }
+
+    #[test]
+    fn world_set_main_source_replaces() {
+        let mut world = NorthdocWorld::new("original");
+        world.set_main_source("replaced");
+        let source = world
+            .source(world.main())
+            .expect("main source should exist after replacement");
+        assert_eq!(source.text(), "replaced");
+    }
+
+    #[test]
+    fn world_evict_cache_no_panic() {
+        NorthdocWorld::evict_cache(5);
+    }
+}
