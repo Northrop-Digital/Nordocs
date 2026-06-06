@@ -25,6 +25,44 @@ cargo tarpaulin        # coverage; config in tarpaulin.toml; 80% minimum (instal
 When you change snapshot-tested output, review and accept with
 `cargo insta review` (do not blindly accept).
 
+## Testing
+
+### Mandatory rules
+
+All six rules must be satisfied before landing any change:
+
+a. **`cargo test` must pass** — run the full test suite before committing. Do not commit code that fails any test.
+
+b. **Unit tests live in the same file as the code** — place `#[cfg(test)]` modules at the bottom of the source file; do not put unit tests in a separate `tests/` file.
+
+c. **Snapshot tests via `insta` for Typst output** — every Markdown feature processed by `markdown.rs` (tables, task lists, footnotes, strikethrough, etc.) and every fat-file composition path must have a snapshot test using `insta::assert_snapshot!`.
+
+d. **CLI E2E tests via `assert_cmd` for every command** — every public `ndoc` subcommand (`build`, `new`, `add`, `edit`, `validate`, `preview`) must have at least one `assert_cmd` test in `tests/cli.rs` covering a success path and a failure path.
+
+e. **No test may invoke an external `typst` binary** — all rendering must go through the embedded `typst` compiler. Tests that shell out to an external process are prohibited.
+
+f. **80% line coverage target** — `cargo tarpaulin` must report ≥ 80% overall line coverage. Config lives in `tarpaulin.toml`. Install: `cargo install cargo-tarpaulin`.
+
+### Snapshot review policy
+
+When snapshot tests fail because output has changed, review the diff with `cargo insta review` before accepting. **Blind acceptance (`cargo insta accept` without reviewing the diff) is prohibited.** Accepting a snapshot implies you have verified the new output is correct.
+
+### Test layers
+
+| Layer | Tool | Location | When to use |
+|-------|------|----------|-------------|
+| Unit | std `#[test]` | Same file as code (`#[cfg(test)]`) | Pure functions; domain logic; error paths |
+| Snapshot | `insta` | `tests/snapshots/` | Typst output from `markdown.rs`; fat-file composition |
+| CLI E2E | `assert_cmd` | `tests/cli.rs` | Binary surface; exit codes; stdout/stderr content |
+| Smoke | `assert_cmd` + `#[ignore]` | `tests/cli.rs` | Release binary at `target/release/ndoc`; run with `cargo test -- --ignored release_smoke_test` |
+
+### Test discipline
+
+- Test behavior through public seams, not implementation internals.
+- Mock only genuinely external boundaries (clock, OS, external network). Do not mock your own modules.
+- Deterministic only: freeze time where needed; no ordering reliance; no real network calls.
+- Before adding any test, ask "what regression would this catch?" — if there is no answer, skip it.
+
 ## ndoc CLI commands
 
 ```sh

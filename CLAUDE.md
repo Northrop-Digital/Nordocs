@@ -21,3 +21,18 @@ cargo fmt
 ```
 
 See `AGENTS.md` for module layout, conventions, and scope guardrails.
+
+## Testing
+
+All six rules must be satisfied before landing any change:
+
+- `cargo test` passes — run the full suite before every commit.
+- Unit tests live in the same file as the code (`#[cfg(test)]` module at the bottom of each source file).
+- Snapshot tests via `insta` for all Typst output (`markdown.rs` features, fat-file composition).
+- CLI E2E tests via `assert_cmd` for every `ndoc` subcommand in `tests/cli.rs` (success + failure paths).
+- No test may invoke an external `typst` binary — use the embedded compiler only.
+- `cargo tarpaulin` reports ≥ 80% line coverage (config in `tarpaulin.toml`).
+
+Snapshot policy: always review diffs with `cargo insta review` before accepting. Blind acceptance is prohibited.
+
+See `AGENTS.md` Testing section for the full test-layer table and smoke test (`cargo test -- --ignored release_smoke_test`) instructions.

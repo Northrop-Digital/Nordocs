@@ -41,6 +41,16 @@ cargo fmt                # format
 ./target/release/ndoc --help
 ```
 
+## Install
+
+```sh
+cargo install --path .   # installs `ndoc` to ~/.cargo/bin/
+ndoc --help
+```
+
+`cargo install` copies the release binary to `~/.cargo/bin/ndoc`. Make sure
+`~/.cargo/bin` is on your `PATH` (added automatically by `rustup`).
+
 ## Architecture
 
 ```

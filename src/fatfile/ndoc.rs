@@ -224,3 +224,182 @@ fn parse_entry_header(line: &str) -> Result<(String, EntryKind, String)> {
 pub fn compute_entry_hash(content: &str) -> String {
     blake3::hash(content.as_bytes()).to_hex().to_string()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- EntryKind ---
+
+    #[test]
+    fn entry_kind_display_component() {
+        assert_eq!(EntryKind::Component.to_string(), "component");
+    }
+
+    #[test]
+    fn entry_kind_display_template() {
+        assert_eq!(EntryKind::Template.to_string(), "template");
+    }
+
+    #[test]
+    fn entry_kind_from_str_valid() {
+        assert_eq!(
+            "component".parse::<EntryKind>().unwrap(),
+            EntryKind::Component
+        );
+        assert_eq!(
+            "template".parse::<EntryKind>().unwrap(),
+            EntryKind::Template
+        );
+    }
+
+    #[test]
+    fn entry_kind_from_str_unknown_returns_error() {
+        let err = "unknown".parse::<EntryKind>().unwrap_err();
+        assert!(
+            err.to_string().contains("unknown entry kind"),
+            "unexpected error: {err}"
+        );
+    }
+
+    // --- compute_entry_hash ---
+
+    #[test]
+    fn compute_entry_hash_is_stable() {
+        let h1 = compute_entry_hash("hello");
+        let h2 = compute_entry_hash("hello");
+        assert_eq!(h1, h2);
+        assert_eq!(h1.len(), 64, "blake3 hex digest must be 64 characters");
+    }
+
+    #[test]
+    fn compute_entry_hash_differs_for_distinct_content() {
+        assert_ne!(compute_entry_hash("hello"), compute_entry_hash("world"));
+    }
+
+    // --- NdocEntry::is_content_changed ---
+
+    #[test]
+    fn ndoc_entry_is_content_changed_returns_false_when_hash_matches() {
+        let content = "#let x = 1";
+        let entry = NdocEntry {
+            name: "mycomp".to_string(),
+            kind: EntryKind::Component,
+            content: content.to_string(),
+            hash: compute_entry_hash(content),
+        };
+        assert!(!entry.is_content_changed());
+    }
+
+    #[test]
+    fn ndoc_entry_is_content_changed_returns_true_when_hash_stale() {
+        let entry = NdocEntry {
+            name: "mycomp".to_string(),
+            kind: EntryKind::Component,
+            content: "#let x = 2".to_string(),
+            hash: compute_entry_hash("#let x = 1"),
+        };
+        assert!(entry.is_content_changed());
+    }
+
+    // --- NdocDocument::new ---
+
+    #[test]
+    fn ndoc_document_new_is_empty() {
+        let doc = NdocDocument::new();
+        assert!(doc.entries.is_empty());
+    }
+
+    // --- NdocDocument::compose ---
+
+    #[test]
+    fn ndoc_document_compose_empty_produces_header_line() {
+        let doc = NdocDocument::new();
+        assert_eq!(doc.compose().trim_end(), "// ndoc document v1");
+    }
+
+    #[test]
+    fn ndoc_document_compose_includes_entry_markers() {
+        let doc = NdocDocument {
+            entries: vec![NdocEntry {
+                name: "my-component".to_string(),
+                kind: EntryKind::Component,
+                content: "#let x = 1".to_string(),
+                hash: String::new(),
+            }],
+        };
+        let text = doc.compose();
+        assert!(text.contains("NDOC-ENTRY: my-component kind=component"));
+        assert!(text.contains("NDOC-END: my-component"));
+        assert!(text.contains("#let x = 1"));
+    }
+
+    // --- NdocDocument::parse ---
+
+    #[test]
+    fn ndoc_document_parse_empty_document() {
+        let doc = NdocDocument::parse("// ndoc document v1\n").unwrap();
+        assert!(doc.entries.is_empty());
+    }
+
+    #[test]
+    fn ndoc_document_compose_parse_round_trip() {
+        let original = NdocDocument {
+            entries: vec![
+                NdocEntry {
+                    name: "heading".to_string(),
+                    kind: EntryKind::Component,
+                    content: "#let level = 1\n#let text = \"Hello\"".to_string(),
+                    hash: String::new(),
+                },
+                NdocEntry {
+                    name: "article".to_string(),
+                    kind: EntryKind::Template,
+                    content: "#import \"heading.ncmp.typ\": *".to_string(),
+                    hash: String::new(),
+                },
+            ],
+        };
+        let text = original.compose();
+        let parsed = NdocDocument::parse(&text).unwrap();
+
+        assert_eq!(parsed.entries.len(), 2);
+        assert_eq!(parsed.entries[0].name, "heading");
+        assert_eq!(parsed.entries[0].kind, EntryKind::Component);
+        assert_eq!(parsed.entries[0].content, original.entries[0].content);
+        assert_eq!(parsed.entries[1].name, "article");
+        assert_eq!(parsed.entries[1].kind, EntryKind::Template);
+        // Parsed hashes must match recomputed content hashes.
+        assert!(!parsed.entries[0].is_content_changed());
+        assert!(!parsed.entries[1].is_content_changed());
+    }
+
+    #[test]
+    fn ndoc_document_parse_error_on_empty_string() {
+        let err = NdocDocument::parse("").unwrap_err();
+        assert!(
+            err.to_string().contains("empty document"),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn ndoc_document_parse_error_on_invalid_header() {
+        let err = NdocDocument::parse("wrong header\n").unwrap_err();
+        assert!(
+            err.to_string().contains("invalid document header"),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn ndoc_document_parse_error_on_missing_end_marker() {
+        let src =
+            "// ndoc document v1\n// === NDOC-ENTRY: foo kind=component hash=abc ===\ncontent\n";
+        let err = NdocDocument::parse(src).unwrap_err();
+        assert!(
+            err.to_string().contains("missing NDOC-END marker"),
+            "unexpected error: {err}"
+        );
+    }
+}

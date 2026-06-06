@@ -26,14 +26,14 @@ fn version_prints() {
         .stdout(predicate::str::contains("ndoc"));
 }
 
-/// The `--json` envelope flag on a `doc` subcommand emits a JSON ok envelope.
+/// The `--json` envelope flag on a `doc` subcommand emits a normalized JSON ok envelope.
 #[test]
 fn doc_json_envelope() {
     let mut cmd = Command::cargo_bin("ndoc").expect("ndoc binary builds");
     cmd.args(["doc", "outline", "--json"])
         .assert()
         .success()
-        .stdout(predicate::str::contains("\"ok\":true"));
+        .stdout(predicate::str::contains(r#""status":"ok""#));
 }
 
 /// `ndoc build <fixture>` produces a non-empty PDF in the same directory.
@@ -595,5 +595,456 @@ fn ndoc_add_from_stdin() {
     assert!(
         content.contains("NDOC-ENTRY: main"),
         "entry added via stdin must appear in document"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T4: --json E2E tests for all subcommands
+// ---------------------------------------------------------------------------
+
+/// Parse stdout bytes as a `serde_json::Value`, failing the test if invalid.
+fn parse_json(bytes: &[u8]) -> serde_json::Value {
+    serde_json::from_slice(bytes).expect("stdout must be valid JSON when --json is active")
+}
+
+/// `ndoc build <file.md> --json` emits a success envelope with `data.output`.
+#[test]
+fn build_json_success() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let md = tmp.path().join("hello.md");
+    std::fs::write(&md, "# Hello\n\nWorld.\n").expect("write markdown fixture");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "build", &abs(&md)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        output.status.success(),
+        "build --json must exit 0 on success"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+    assert!(
+        v["data"]["output"].as_str().is_some(),
+        "success envelope must include data.output as a string"
+    );
+}
+
+/// `ndoc build <missing.md> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn build_json_failure() {
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "build", "nonexistent_t4.md"])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "build --json must exit non-zero on failure"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+/// `ndoc new <path> --json` emits a success envelope with `data.path`.
+#[test]
+fn new_json_success() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("fresh.ndoc.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "new", &abs(&doc)])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "new --json must exit 0 on success");
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+    assert!(
+        v["data"]["path"].as_str().is_some(),
+        "success envelope must include data.path as a string"
+    );
+}
+
+/// `ndoc new <existing> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn new_json_failure() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("existing.ndoc.typ");
+    std::fs::write(&doc, "original content").expect("create pre-existing file");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "new", &abs(&doc)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "new --json must exit non-zero when file exists"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+/// `ndoc add <doc> <name> --json` emits a success envelope (data is absent for add).
+#[test]
+fn add_json_success() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let content_file = tmp.path().join("comp.typ");
+    std::fs::write(&content_file, "#let x = ()").expect("write content file");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["new", &abs(&doc)])
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "--json",
+            "add",
+            &abs(&doc),
+            "mycomp",
+            "--content-file",
+            &abs(&content_file),
+        ])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "add --json must exit 0 on success");
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+}
+
+/// `ndoc add <missing-doc> <name> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn add_json_failure() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("ghost.ndoc.typ");
+    let content_file = tmp.path().join("comp.typ");
+    std::fs::write(&content_file, "#let x = ()").expect("write content file");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "--json",
+            "add",
+            &abs(&ghost),
+            "mycomp",
+            "--content-file",
+            &abs(&content_file),
+        ])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "add --json must exit non-zero on failure"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+/// `ndoc edit <doc> <entry> --json` emits a success envelope (data is absent for edit).
+#[test]
+fn edit_json_success() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let v1 = tmp.path().join("v1.typ");
+    let v2 = tmp.path().join("v2.typ");
+    std::fs::write(&v1, "#let x = ()").expect("write v1 content");
+    std::fs::write(&v2, "#let x = (updated: true)").expect("write v2 content");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["new", &abs(&doc)])
+        .assert()
+        .success();
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["add", &abs(&doc), "mycomp", "--content-file", &abs(&v1)])
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "--json",
+            "edit",
+            &abs(&doc),
+            "mycomp",
+            "--content-file",
+            &abs(&v2),
+        ])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        output.status.success(),
+        "edit --json must exit 0 on success"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+}
+
+/// `ndoc edit <doc> <missing-entry> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn edit_json_failure() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let content_file = tmp.path().join("content.typ");
+    std::fs::write(&content_file, "#let x = ()").expect("write content file");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["new", &abs(&doc)])
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "--json",
+            "edit",
+            &abs(&doc),
+            "nonexistent",
+            "--content-file",
+            &abs(&content_file),
+        ])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "edit --json must exit non-zero when entry is absent"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+/// `ndoc validate <valid.ndoc.typ> --json` emits status 'ok' with an empty violations list.
+#[test]
+fn validate_json_valid() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/valid.ndoc.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "validate", &abs(&input)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        output.status.success(),
+        "validate --json must exit 0 for a valid file"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+    let violations = v["data"]["violations"]
+        .as_array()
+        .expect("data.violations must be an array");
+    assert!(
+        violations.is_empty(),
+        "valid file must produce an empty violations list"
+    );
+}
+
+/// `ndoc validate <invalid.ndoc.typ> --json` emits status 'ok' with a non-empty violations list
+/// and exits non-zero (violations are reported through `data`, not the error envelope).
+#[test]
+fn validate_json_violations() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/invalid.ndoc.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "validate", &abs(&input)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "validate --json must exit non-zero when violations exist"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "ok",
+        "violations are reported in data, not as an error envelope"
+    );
+    let violations = v["data"]["violations"]
+        .as_array()
+        .expect("data.violations must be an array");
+    assert!(
+        !violations.is_empty(),
+        "invalid file must produce at least one violation"
+    );
+    assert!(
+        violations[0]["message"].as_str().is_some(),
+        "each violation must have a message string"
+    );
+}
+
+/// `ndoc validate <missing.ndoc.typ> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn validate_json_failure() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("ghost.ndoc.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "validate", &abs(&ghost)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "validate --json must exit non-zero for an unreadable file"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+/// `ndoc preview <valid.md> --json` emits a success envelope with `data.preview_path`.
+#[test]
+fn preview_json_success() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let md = tmp.path().join("preview.md");
+    std::fs::write(&md, "# Preview\n\nA simple document.\n").expect("write markdown fixture");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "preview", &abs(&md)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        output.status.success(),
+        "preview --json must exit 0 on success"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+    assert!(
+        v["data"]["preview_path"].as_str().is_some(),
+        "success envelope must include data.preview_path as a string"
+    );
+}
+
+/// `ndoc preview <invalid.ndoc.typ> --json` emits an error envelope with a non-zero exit.
+#[test]
+fn preview_json_failure() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/invalid.ndoc.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "preview", &abs(&input)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "preview --json must exit non-zero for an invalid input"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(
+        v["status"], "error",
+        "failure envelope must have status 'error'"
+    );
+    assert!(
+        v["message"].as_str().is_some_and(|m| !m.is_empty()),
+        "failure envelope must include a non-empty message"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T6: Release binary smoke test (gated with #[ignore])
+// ---------------------------------------------------------------------------
+
+/// Release-binary smoke test: locates `target/release/ndoc` built from the
+/// current workspace and verifies that `ndoc build tests/fixtures/sample.md`
+/// exits 0 with a non-empty PDF.
+///
+/// This test is skipped by default; run it explicitly after `cargo build --release`:
+///
+/// ```sh
+/// cargo build --release
+/// cargo test -- --ignored release_smoke_test
+/// ```
+#[test]
+#[ignore]
+fn release_smoke_test() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let release_binary = manifest.join("target/release/ndoc");
+    let input = manifest.join("tests/fixtures/sample.md");
+    let expected_pdf = manifest.join("tests/fixtures/sample.pdf");
+
+    // Remove any artifact from a previous run so we can assert this run created it.
+    let _ = std::fs::remove_file(&expected_pdf);
+
+    let status = std::process::Command::new(&release_binary)
+        .arg("build")
+        .arg(&input)
+        .status()
+        .unwrap_or_else(|e| {
+            panic!(
+                "release binary at {release_binary:?} could not be executed: {e}\n\
+                 Run `cargo build --release` before this test."
+            )
+        });
+
+    assert!(
+        status.success(),
+        "release `ndoc build` must exit 0 for a valid Markdown input"
+    );
+    assert!(
+        expected_pdf.exists(),
+        "release `ndoc build` must create a PDF at {expected_pdf:?}"
+    );
+    assert!(
+        expected_pdf.metadata().expect("PDF metadata").len() > 0,
+        "release `ndoc build` must produce a non-empty PDF"
     );
 }

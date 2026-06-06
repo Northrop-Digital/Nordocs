@@ -5,6 +5,8 @@
 //! `doc` authoring subgroup. Each command currently dispatches into a stub that
 //! returns success; logic is filled in as the corresponding services are ported.
 
+pub mod output;
+
 use std::io::Read as _;
 
 use anyhow::Context as _;
@@ -18,6 +20,9 @@ use crate::fatfile::ndoc::EntryKind;
 pub struct Cli {
     #[command(subcommand)]
     command: Command,
+    /// Emit a JSON envelope to stdout instead of human-readable output.
+    #[arg(long, global = true)]
+    pub json: bool,
 }
 
 /// Top-level command groups for the refined v1 surface.
@@ -39,13 +44,13 @@ pub enum Command {
     Preview(PreviewArgs),
     /// Document authoring operations (new, outline, add, set, patch, ...).
     Doc(DocArgs),
-    /// Manage the component library.
+    /// Manage the component library (scaffolded, not yet implemented).
     Component,
-    /// Manage reusable items/data collections.
+    /// Manage reusable items/data collections (scaffolded, not yet implemented).
     Item,
-    /// Manage document templates.
+    /// Manage document templates (scaffolded, not yet implemented).
     Template,
-    /// Manage embedded images.
+    /// Manage embedded images (scaffolded, not yet implemented).
     Image,
 }
 
@@ -80,9 +85,9 @@ pub struct AddArgs {
     pub document: std::path::PathBuf,
     /// Unique name for the new entry.
     pub name: String,
-    /// Entry kind: `component` (default) or `template`.
-    #[arg(long)]
-    pub kind: Option<EntryKind>,
+    /// Entry kind for the new entry.
+    #[arg(long, default_value = "component")]
+    pub kind: EntryKind,
     /// Read entry content from this file instead of stdin.
     #[arg(long)]
     pub content_file: Option<std::path::PathBuf>,
@@ -119,9 +124,6 @@ pub struct PreviewArgs {
 pub struct DocArgs {
     #[command(subcommand)]
     pub command: DocCommand,
-    /// Emit a `{ok,data?,error?}` JSON envelope instead of human output.
-    #[arg(long, global = true)]
-    pub json: bool,
 }
 
 /// Authoring subcommands under `ndoc doc`.
@@ -159,34 +161,39 @@ impl Cli {
     /// Dispatch the parsed command. Returns `anyhow::Result` so the binary can
     /// print a rich error chain.
     pub fn run(self) -> anyhow::Result<()> {
+        let json = self.json;
         match self.command {
-            Command::Render(args) => cmd_render(args),
-            Command::Build(args) => cmd_build(args),
-            Command::New(args) => cmd_new(args),
-            Command::Add(args) => cmd_add(args),
-            Command::Edit(args) => cmd_edit(args),
-            Command::Validate(args) => cmd_validate(args),
-            Command::Preview(args) => cmd_preview(args),
-            Command::Doc(args) => cmd_doc(args),
-            Command::Component => stub("component"),
-            Command::Item => stub("item"),
-            Command::Template => stub("template"),
-            Command::Image => stub("image"),
+            Command::Render(args) => cmd_render(args, json),
+            Command::Build(args) => cmd_build(args, json),
+            Command::New(args) => cmd_new(args, json),
+            Command::Add(args) => cmd_add(args, json),
+            Command::Edit(args) => cmd_edit(args, json),
+            Command::Validate(args) => cmd_validate(args, json),
+            Command::Preview(args) => cmd_preview(args, json),
+            Command::Doc(args) => cmd_doc(args, json),
+            Command::Component => stub("component", json),
+            Command::Item => stub("item", json),
+            Command::Template => stub("template", json),
+            Command::Image => stub("image", json),
         }
     }
 }
 
 /// Placeholder for a not-yet-ported command.
-fn stub(name: &str) -> anyhow::Result<()> {
-    println!("ndoc: '{name}' is scaffolded but not yet implemented");
+fn stub(name: &str, json: bool) -> anyhow::Result<()> {
+    if json {
+        output::emit_json_result(None);
+    } else {
+        println!("ndoc: '{name}' is scaffolded but not yet implemented");
+    }
     Ok(())
 }
 
-fn cmd_build(args: BuildArgs) -> anyhow::Result<()> {
+fn cmd_build(args: BuildArgs, json: bool) -> anyhow::Result<()> {
     let path = &args.input;
     let name = path.to_string_lossy();
 
-    if name.ends_with(".ndoc.typ") {
+    let output_path = if name.ends_with(".ndoc.typ") {
         let src = std::fs::read_to_string(path)
             .with_context(|| format!("failed to read '{}'", path.display()))?;
         let doc = crate::fatfile::ndoc::NdocDocument::parse(&src)
@@ -200,39 +207,51 @@ fn cmd_build(args: BuildArgs) -> anyhow::Result<()> {
         let pdf_bytes = crate::compiler::compile_to_pdf(&typst_source)
             .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?;
         let base = name.strip_suffix(".ndoc.typ").unwrap_or(name.as_ref());
-        let output = std::path::PathBuf::from(format!("{base}.pdf"));
-        std::fs::write(&output, &pdf_bytes)
-            .with_context(|| format!("failed to write PDF to '{}'", output.display()))?;
+        let out = std::path::PathBuf::from(format!("{base}.pdf"));
+        std::fs::write(&out, &pdf_bytes)
+            .with_context(|| format!("failed to write PDF to '{}'", out.display()))?;
+        out
     } else if path.extension().and_then(|e| e.to_str()) == Some("md") {
-        // Existing Markdown pipeline — unchanged.
         let markdown = std::fs::read_to_string(path)
             .with_context(|| format!("failed to read '{}'", path.display()))?;
         let typst_source = crate::markdown::markdown_to_typst(&markdown)
             .with_context(|| format!("failed to convert '{}' to Typst", path.display()))?;
         let pdf_bytes = crate::compiler::compile_to_pdf(&typst_source)
             .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?;
-        let output = path.with_extension("pdf");
-        std::fs::write(&output, &pdf_bytes)
-            .with_context(|| format!("failed to write PDF to '{}'", output.display()))?;
+        let out = path.with_extension("pdf");
+        std::fs::write(&out, &pdf_bytes)
+            .with_context(|| format!("failed to write PDF to '{}'", out.display()))?;
+        out
     } else {
         anyhow::bail!(
             "unsupported input format '{}': expected a '.md' or '.ndoc.typ' file",
             path.display()
         );
+    };
+
+    if json {
+        output::emit_json_result(Some(
+            serde_json::json!({"output": output_path.display().to_string()}),
+        ));
     }
 
     Ok(())
 }
 
-fn cmd_new(args: NewArgs) -> anyhow::Result<()> {
+fn cmd_new(args: NewArgs, json: bool) -> anyhow::Result<()> {
     crate::authoring::ndoc::create_document(&args.path)
         .with_context(|| format!("failed to create document at '{}'", args.path.display()))?;
+    if json {
+        output::emit_json_result(Some(
+            serde_json::json!({"path": args.path.display().to_string()}),
+        ));
+    }
     Ok(())
 }
 
-fn cmd_add(args: AddArgs) -> anyhow::Result<()> {
+fn cmd_add(args: AddArgs, json: bool) -> anyhow::Result<()> {
     let content = read_content(args.content_file.as_deref())?;
-    let kind = args.kind.unwrap_or(EntryKind::Component);
+    let kind = args.kind;
     crate::authoring::ndoc::add_entry(&args.document, &args.name, kind, &content).with_context(
         || {
             format!(
@@ -242,10 +261,13 @@ fn cmd_add(args: AddArgs) -> anyhow::Result<()> {
             )
         },
     )?;
+    if json {
+        output::emit_json_result(None);
+    }
     Ok(())
 }
 
-fn cmd_edit(args: EditArgs) -> anyhow::Result<()> {
+fn cmd_edit(args: EditArgs, json: bool) -> anyhow::Result<()> {
     let content = read_content(args.content_file.as_deref())?;
     crate::authoring::ndoc::edit_entry(&args.document, &args.name, &content).with_context(
         || {
@@ -256,6 +278,9 @@ fn cmd_edit(args: EditArgs) -> anyhow::Result<()> {
             )
         },
     )?;
+    if json {
+        output::emit_json_result(None);
+    }
     Ok(())
 }
 
@@ -265,7 +290,7 @@ fn cmd_edit(args: EditArgs) -> anyhow::Result<()> {
 /// violation to stdout as `{location}: {message}`, and exits with code 1 when
 /// any violation is found. Unsupported extensions bail with an actionable
 /// message before validation is attempted.
-fn cmd_validate(args: ValidateArgs) -> anyhow::Result<()> {
+fn cmd_validate(args: ValidateArgs, json: bool) -> anyhow::Result<()> {
     let path = &args.input;
     let name = path.to_string_lossy();
 
@@ -282,24 +307,34 @@ fn cmd_validate(args: ValidateArgs) -> anyhow::Result<()> {
         );
     };
 
-    for v in &result.violations {
-        println!("{}: {}", v.location, v.message);
-    }
-
-    if !result.is_valid() {
-        std::process::exit(1);
+    if json {
+        let violations: Vec<serde_json::Value> = result
+            .violations
+            .iter()
+            .map(|v| serde_json::json!({"location": v.location, "message": v.message}))
+            .collect();
+        output::emit_json_result(Some(serde_json::json!({"violations": violations})));
+        if !result.is_valid() {
+            std::process::exit(1);
+        }
+    } else {
+        for v in &result.violations {
+            println!("{}: {}", v.location, v.message);
+        }
+        if !result.is_valid() {
+            std::process::exit(1);
+        }
     }
 
     Ok(())
 }
 
-fn cmd_render(args: RenderArgs) -> anyhow::Result<()> {
+fn cmd_render(args: RenderArgs, json: bool) -> anyhow::Result<()> {
     let _ = args;
-    // TODO(port): read input, compose if needed, compile_to_pdf, write output.
-    stub("render")
+    stub("render", json)
 }
 
-fn cmd_preview(args: PreviewArgs) -> anyhow::Result<()> {
+fn cmd_preview(args: PreviewArgs, json: bool) -> anyhow::Result<()> {
     let path = &args.input;
     let name = path.to_string_lossy();
 
@@ -328,14 +363,23 @@ fn cmd_preview(args: PreviewArgs) -> anyhow::Result<()> {
     let pdf_bytes = crate::compiler::compile_to_pdf(&typst_source)
         .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?;
 
-    // Write to OS temp dir — ndoc does not delete before the viewer opens.
     let stem = path.file_stem().unwrap_or_default().to_string_lossy();
     let temp_pdf = std::env::temp_dir().join(format!("{stem}.pdf"));
     std::fs::write(&temp_pdf, &pdf_bytes)
         .with_context(|| format!("failed to write preview PDF to '{}'", temp_pdf.display()))?;
 
-    // When NDOC_NO_OPEN=1 (e.g. headless CI), skip the viewer but verify a
-    // non-empty PDF was produced so the render path is still exercised.
+    if json {
+        anyhow::ensure!(
+            !pdf_bytes.is_empty(),
+            "compiled PDF is unexpectedly empty for '{}'",
+            path.display()
+        );
+        output::emit_json_result(Some(
+            serde_json::json!({"preview_path": temp_pdf.display().to_string()}),
+        ));
+        return Ok(());
+    }
+
     if std::env::var("NDOC_NO_OPEN").as_deref() == Ok("1") {
         anyhow::ensure!(
             !pdf_bytes.is_empty(),
@@ -389,7 +433,7 @@ fn open_with_default_viewer(path: &std::path::Path) -> anyhow::Result<()> {
     )
 }
 
-fn cmd_doc(args: DocArgs) -> anyhow::Result<()> {
+fn cmd_doc(args: DocArgs, json: bool) -> anyhow::Result<()> {
     let name = match args.command {
         DocCommand::New => "doc new",
         DocCommand::Outline => "doc outline",
@@ -398,11 +442,11 @@ fn cmd_doc(args: DocArgs) -> anyhow::Result<()> {
         DocCommand::Set => "doc set",
         DocCommand::Schema => "doc schema",
     };
-    if args.json {
-        println!("{{\"ok\":true,\"data\":null}}");
+    if json {
+        output::emit_json_result(None);
         Ok(())
     } else {
-        stub(name)
+        stub(name, false)
     }
 }
 

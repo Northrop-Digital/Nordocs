@@ -8,15 +8,20 @@ use std::process::ExitCode;
 
 use clap::Parser;
 
+use northdoc::cli::output::emit_json_error;
 use northdoc::cli::Cli;
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
+    let json = cli.json;
     match cli.run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(err) => {
-            // anyhow chains print the full cause stack on the alternate formatter.
-            eprintln!("error: {err:#}");
+            if json {
+                emit_json_error(&format!("{err:#}"));
+            } else {
+                eprintln!("error: {err:#}");
+            }
             ExitCode::FAILURE
         }
     }

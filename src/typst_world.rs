@@ -126,7 +126,10 @@ impl World for NorthdocWorld {
 
     fn today(&self, _offset: Option<i64>) -> Option<Datetime> {
         // Deterministic builds are preferred; wire real clock support later.
-        Some(Datetime::from_ymd(1970, 1, 1).expect("epoch is a valid date"))
+        // INVARIANT: 1970-01-01 is a provably valid date; year 1970, month 1,
+        // and day 1 are all within valid ranges, so from_ymd cannot return None.
+        #[allow(clippy::expect_used)]
+        Some(Datetime::from_ymd(1970, 1, 1).expect("1970-01-01 is a provably valid date"))
     }
 }
 

@@ -97,7 +97,7 @@ pub struct DocumentConstraints {
 /// `Catalogue::from_builtins()` returns the canonical built-in catalogue used by
 /// `ndoc validate`. Direct construction via `Catalogue::new()` yields an empty
 /// catalogue suitable for testing or incremental population.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct Catalogue {
     pub components: Vec<ComponentSchema>,
     pub templates: Vec<TemplateSchema>,
@@ -201,6 +201,64 @@ mod tests {
     use super::*;
 
     #[test]
+    fn catalogue_new_is_empty() {
+        let cat = Catalogue::new();
+        assert!(cat.components.is_empty());
+        assert!(cat.templates.is_empty());
+        assert!(cat.document_constraints.rules.is_empty());
+    }
+
+    #[test]
+    fn constraint_kind_serde_uses_snake_case() {
+        let cases: &[(ConstraintKind, &str)] = &[
+            (ConstraintKind::HeaderPresence, "\"header_presence\""),
+            (
+                ConstraintKind::EntryNameUniqueness,
+                "\"entry_name_uniqueness\"",
+            ),
+            (ConstraintKind::ValidEntryKind, "\"valid_entry_kind\""),
+            (
+                ConstraintKind::MarkdownFrontmatterValid,
+                "\"markdown_frontmatter_valid\"",
+            ),
+        ];
+        for (kind, expected) in cases {
+            let json = serde_json::to_string(kind).expect("serialize ConstraintKind");
+            assert_eq!(json, *expected);
+            let back: ConstraintKind =
+                serde_json::from_str(&json).expect("deserialize ConstraintKind");
+            assert_eq!(back, *kind);
+        }
+    }
+
+    #[test]
+    fn input_schema_serde_round_trip() {
+        let schema = InputSchema {
+            name: "level".to_string(),
+            kind: InputKind::Number,
+            required: true,
+        };
+        let json = serde_json::to_string(&schema).expect("serialize InputSchema");
+        let back: InputSchema = serde_json::from_str(&json).expect("deserialize InputSchema");
+        assert_eq!(schema, back);
+    }
+
+    #[test]
+    fn component_schema_new_fields() {
+        let schema = ComponentSchema::new("x");
+        assert_eq!(schema.name, "x");
+        assert!(schema.inputs.is_empty());
+    }
+
+    #[test]
+    fn template_schema_new_fields() {
+        let schema = TemplateSchema::new("x");
+        assert_eq!(schema.name, "x");
+        assert!(schema.document_inputs.is_empty());
+        assert!(schema.allowed_components.is_empty());
+    }
+
+    #[test]
     fn schema_round_trip_component() {
         let schema = ComponentSchema {
             name: "heading".to_string(),
@@ -279,5 +337,13 @@ mod tests {
         assert!(kinds.contains(&ConstraintKind::EntryNameUniqueness));
         assert!(kinds.contains(&ConstraintKind::ValidEntryKind));
         assert!(kinds.contains(&ConstraintKind::MarkdownFrontmatterValid));
+    }
+
+    #[test]
+    fn catalogue_round_trip() {
+        let original = Catalogue::from_builtins();
+        let json = serde_json::to_string(&original).expect("serialize Catalogue");
+        let restored: Catalogue = serde_json::from_str(&json).expect("deserialize Catalogue");
+        assert_eq!(original, restored);
     }
 }

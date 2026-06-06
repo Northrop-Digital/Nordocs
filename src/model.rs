@@ -68,3 +68,105 @@ pub struct Document {
     #[serde(default)]
     pub nodes: Vec<Node>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn node_id_display_formats_inner_string() {
+        let id = NodeId("heading-1a2b".to_string());
+        assert_eq!(format!("{id}"), "heading-1a2b");
+    }
+
+    #[test]
+    fn input_value_serde_round_trip() {
+        let iv = InputValue {
+            kind: InputKind::String,
+            value: serde_json::json!("hello"),
+        };
+        let json = serde_json::to_string(&iv).expect("serialize InputValue");
+        let back: InputValue = serde_json::from_str(&json).expect("deserialize InputValue");
+        assert_eq!(iv, back);
+    }
+
+    #[test]
+    fn node_with_children_serde_round_trip() {
+        let child = Node {
+            id: NodeId("para-0001".to_string()),
+            component: "paragraph".to_string(),
+            inputs: {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert(
+                    "text".to_string(),
+                    InputValue {
+                        kind: InputKind::Content,
+                        value: serde_json::json!("body text"),
+                    },
+                );
+                m
+            },
+            children: Vec::new(),
+        };
+        let node = Node {
+            id: NodeId("section-aabb".to_string()),
+            component: "section".to_string(),
+            inputs: std::collections::BTreeMap::new(),
+            children: vec![child],
+        };
+        let json = serde_json::to_string(&node).expect("serialize Node");
+        let back: Node = serde_json::from_str(&json).expect("deserialize Node");
+        assert_eq!(node, back);
+    }
+
+    #[test]
+    fn document_serde_round_trip() {
+        let doc = Document {
+            template: "default".to_string(),
+            inputs: {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert(
+                    "title".to_string(),
+                    InputValue {
+                        kind: InputKind::String,
+                        value: serde_json::json!("My Doc"),
+                    },
+                );
+                m
+            },
+            nodes: vec![Node {
+                id: NodeId("heading-1234".to_string()),
+                component: "heading".to_string(),
+                inputs: std::collections::BTreeMap::new(),
+                children: Vec::new(),
+            }],
+        };
+        let json = serde_json::to_string(&doc).expect("serialize Document");
+        let back: Document = serde_json::from_str(&json).expect("deserialize Document");
+        assert_eq!(doc, back);
+    }
+
+    #[test]
+    fn input_kind_serde_uses_lowercase_names() {
+        let cases: &[(InputKind, &str)] = &[
+            (InputKind::String, "\"string\""),
+            (InputKind::Number, "\"number\""),
+            (InputKind::Boolean, "\"boolean\""),
+            (InputKind::Color, "\"color\""),
+            (InputKind::Content, "\"content\""),
+            (InputKind::Image, "\"image\""),
+        ];
+        for (kind, expected) in cases {
+            let json = serde_json::to_string(kind).expect("serialize InputKind");
+            assert_eq!(
+                json, *expected,
+                "InputKind::{kind:?} must serialize to lowercase name"
+            );
+            let back: InputKind = serde_json::from_str(&json).expect("deserialize InputKind");
+            assert_eq!(
+                back, *kind,
+                "InputKind::{kind:?} must round-trip through JSON"
+            );
+        }
+    }
+}
