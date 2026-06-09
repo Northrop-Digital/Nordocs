@@ -1,0 +1,8 @@
+---
+source: tests/cli.rs
+assertion_line: 1751
+expression: rendered
+---
+template: fee-proposal
+section-aabb (section)
+  para-0001 (paragraph)

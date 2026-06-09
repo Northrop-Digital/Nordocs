@@ -1,0 +1,47 @@
+---
+source: src/authoring/doc_state.rs
+assertion_line: 234
+expression: composed
+---
+// === STATE ===
+// {
+//   "template": "article",
+//   "inputs": {
+//     "title": {
+//       "kind": "string",
+//       "value": "My Doc"
+//     }
+//   },
+//   "nodes": [
+//     {
+//       "id": "section-aabb",
+//       "component": "section",
+//       "inputs": {},
+//       "children": [
+//         {
+//           "id": "para-0001",
+//           "component": "paragraph",
+//           "inputs": {
+//             "body": {
+//               "kind": "content",
+//               "value": "Hello **world**"
+//             },
+//             "cover": {
+//               "kind": "image",
+//               "value": "logo.png"
+//             }
+//           },
+//           "children": []
+//         }
+//       ]
+//     }
+//   ]
+// }
+
+// === TEMPLATE ===
+
+
+// === DOCUMENT ===
+
+
+// === IMAGES ===

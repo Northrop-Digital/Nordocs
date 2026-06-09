@@ -103,7 +103,7 @@ fn read_document(path: &Path) -> Result<String> {
 /// On any failure the temp file is removed and the original target is left
 /// untouched.  The temp file is placed in the same directory as `target` to
 /// guarantee `rename` stays on the same filesystem.
-fn atomic_write(target: &Path, content: &str) -> Result<()> {
+pub(crate) fn atomic_write(target: &Path, content: &str) -> Result<()> {
     let dir = target.parent().unwrap_or_else(|| Path::new("."));
     let file_name = target
         .file_name()

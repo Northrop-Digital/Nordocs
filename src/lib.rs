@@ -14,6 +14,7 @@
 //! - [`fatfile`] — the self-contained `.ndoc.typ` "fat file": compose, extract,
 //!   hash (STATE / TEMPLATE / DOCUMENT / IMAGES).
 //! - [`authoring`] — transactional read-validate-write over fat files.
+//! - [`item`] — reusable item collections and schema-driven validation.
 //! - [`schema`] — component/template input schema parsing and catalogue.
 //! - [`validation`] — schema-based validation for `.ndoc.typ` and `.md` documents.
 //! - [`model`] — shared domain types (nodes, inputs, IDs, manifests).
@@ -24,6 +25,7 @@ pub mod cli;
 pub mod compiler;
 pub mod error;
 pub mod fatfile;
+pub mod item;
 pub mod markdown;
 pub mod model;
 pub mod schema;

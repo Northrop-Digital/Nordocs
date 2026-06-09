@@ -10,6 +10,11 @@ brief; this file is the short version and inherits everything there.
 - **Never touch `.reference/`** — read-only C# source to port from.
 - Keep `cargo build`, `cargo test`, and `cargo clippy` green.
 - v1 is CLI-first and PDF-only. No GUI / no MCP surface / no plugins yet.
+- The `ndoc` command surface is **complete** (no stubs): `render`, `build`,
+  `new`/`add`/`edit`, `validate`, `preview`, the `doc` authoring subgroup, plus
+  `component`/`item`/`template`/`image`. Extend existing commands rather than
+  re-scaffolding. See `README.md` for flags, default output paths, and the
+  `--json` envelope; `AGENTS.md` for the full command list and module layout.
 
 ## Quick commands
 

@@ -29,8 +29,12 @@ fn version_prints() {
 /// The `--json` envelope flag on a `doc` subcommand emits a normalized JSON ok envelope.
 #[test]
 fn doc_json_envelope() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+
     let mut cmd = Command::cargo_bin("ndoc").expect("ndoc binary builds");
-    cmd.args(["doc", "outline", "--json"])
+    cmd.args(["doc", "outline", "--json", &abs(&doc)])
         .assert()
         .success()
         .stdout(predicate::str::contains(r#""status":"ok""#));
@@ -559,16 +563,451 @@ fn preview_valid_ndoc_typ_exit_zero() {
         .success();
 }
 
-/// `ndoc render` dispatches to the scaffold stub and prints a not-yet-implemented
-/// message — covers cmd_render and the stub() function body.
+/// `ndoc render <bare.typ>` exits non-zero: render rejects a bare `.typ`,
+/// accepting only the `.ncmp.typ` / `.ndoct.typ` / `.ndoc.typ` suffixes.
 #[test]
-fn e2e_render_stub_executes() {
+fn e2e_render_rejects_bare_typ() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let input = tmp.path().join("placeholder.typ");
+    std::fs::write(&input, "Hello").expect("write bare .typ");
+
     Command::cargo_bin("ndoc")
         .expect("ndoc binary builds")
-        .args(["render", "placeholder.typ"])
+        .args(["render", &abs(&input)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("placeholder.typ"));
+}
+
+/// `ndoc render <fixture.ndoc.typ>` compiles a four-section authoring file to a
+/// non-empty PDF at the default suffix-stripped `.pdf` path.
+#[test]
+fn e2e_render_produces_pdf() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/render.ndoc.typ");
+    let expected_pdf = manifest.join("tests/fixtures/render.pdf");
+
+    let _ = std::fs::remove_file(&expected_pdf);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["render", &abs(&input)])
+        .assert()
+        .success();
+
+    assert!(
+        expected_pdf.exists(),
+        "render must create a PDF at {expected_pdf:?}"
+    );
+    assert!(
+        expected_pdf.metadata().expect("PDF metadata").len() > 0,
+        "rendered PDF must be non-empty"
+    );
+    let _ = std::fs::remove_file(&expected_pdf);
+}
+
+/// `ndoc render -o <path>` writes the PDF at the override path.
+#[test]
+fn e2e_render_output_override() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/render.ncmp.typ");
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("custom.pdf");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["render", &abs(&input), "-o", &abs(&out)])
+        .assert()
+        .success();
+
+    assert!(
+        out.exists(),
+        "render -o must write the PDF at the override path"
+    );
+    assert!(
+        out.metadata().expect("PDF metadata").len() > 0,
+        "rendered PDF must be non-empty"
+    );
+}
+
+/// `ndoc render <missing.ncmp.typ>` exits non-zero and names the offending path.
+#[test]
+fn e2e_render_missing_input() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("ghost.ncmp.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["render", &abs(&ghost)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("ghost.ncmp.typ"));
+}
+
+/// `ndoc render <fixture> --json` emits `{"status":"ok","data":{"output":...}}`.
+#[test]
+fn e2e_render_json_envelope() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let input = manifest.join("tests/fixtures/render.ncmp.typ");
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("rendered.pdf");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "render", &abs(&input), "-o", &abs(&out)])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        output.status.success(),
+        "render --json must exit 0 on success"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok", "success envelope must have status 'ok'");
+    assert_eq!(
+        v["data"]["output"].as_str(),
+        Some(abs(&out).as_str()),
+        "envelope must report the output path"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T4: component schema / list subcommands
+// ---------------------------------------------------------------------------
+
+/// `ndoc component schema <file>` reports each input's name, kind, and required
+/// flag in human-readable form.
+#[test]
+fn e2e_component_schema() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let file = manifest.join("tests/fixtures/component_schema.ncmp.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["component", "schema", &abs(&file)])
         .assert()
         .success()
-        .stdout(predicate::str::contains("scaffolded"));
+        .stdout(predicate::str::contains("hero-banner"))
+        .stdout(predicate::str::contains("title: string (required)"))
+        .stdout(predicate::str::contains("subtitle: content (optional)"));
+}
+
+/// `ndoc component schema <file> --json` emits the full schema under `data`.
+#[test]
+fn e2e_component_schema_json() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let file = manifest.join("tests/fixtures/component_schema.ncmp.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "component", "schema", &abs(&file)])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "schema --json must exit 0");
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok");
+    assert_eq!(v["data"]["component"]["name"], "hero-banner");
+    assert_eq!(v["data"]["component"]["inputs"][0]["name"], "title");
+    assert_eq!(v["data"]["component"]["inputs"][0]["kind"], "string");
+    assert_eq!(v["data"]["component"]["inputs"][0]["required"], true);
+    assert_eq!(v["data"]["component"]["inputs"][1]["required"], false);
+}
+
+/// `ndoc component schema <missing>` exits non-zero and names the offending path.
+#[test]
+fn e2e_component_schema_missing() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("ghost.ncmp.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["component", "schema", &abs(&ghost)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("ghost.ncmp.typ"));
+}
+
+/// `ndoc component list <dir>` enumerates components in stable (sorted) order.
+#[test]
+fn e2e_component_list_stable_order() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let body = "/*---\ncomponentId: REPLACE\ninputs:\n  - name: x\n    type: string\n---*/\n";
+    std::fs::write(
+        tmp.path().join("zeta.ncmp.typ"),
+        body.replace("REPLACE", "zeta"),
+    )
+    .expect("write zeta");
+    std::fs::write(
+        tmp.path().join("alpha.ncmp.typ"),
+        body.replace("REPLACE", "alpha"),
+    )
+    .expect("write alpha");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "component", "list", &abs(tmp.path())])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "list --json must exit 0");
+    let v = parse_json(&output.stdout);
+    let names: Vec<&str> = v["data"]["components"]
+        .as_array()
+        .expect("components array")
+        .iter()
+        .map(|c| c["name"].as_str().expect("name string"))
+        .collect();
+    assert_eq!(names, vec!["alpha", "zeta"], "sorted by path");
+}
+
+/// `ndoc component list <empty-dir>` reports zero components and exits 0.
+#[test]
+fn e2e_component_list_empty_dir() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["component", "list", &abs(tmp.path())])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("no components found"));
+}
+
+/// `ndoc component list <missing-dir>` exits non-zero with the offending path.
+#[test]
+fn e2e_component_list_missing_dir() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("nonexistent");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["component", "list", &abs(&ghost)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nonexistent"));
+}
+
+// ---------------------------------------------------------------------------
+// T5: template show subcommand
+// ---------------------------------------------------------------------------
+
+/// `ndoc template show <path>` reports document inputs and permitted components.
+#[test]
+fn e2e_template_show() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let file = manifest.join("tests/fixtures/template_show.ndoct.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["template", "show", &abs(&file)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("fee-proposal"))
+        .stdout(predicate::str::contains("title: string (required)"))
+        .stdout(predicate::str::contains("date: string (optional)"))
+        .stdout(predicate::str::contains("cover-page"))
+        .stdout(predicate::str::contains("section-title"));
+}
+
+/// `ndoc template show <path> --json` emits the full schema under `data.template`.
+#[test]
+fn e2e_template_show_json() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let file = manifest.join("tests/fixtures/template_show.ndoct.typ");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "template", "show", &abs(&file)])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "show --json must exit 0");
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok");
+    assert_eq!(v["data"]["template"]["name"], "fee-proposal");
+    assert_eq!(v["data"]["template"]["document_inputs"][0]["name"], "title");
+    assert_eq!(
+        v["data"]["template"]["document_inputs"][0]["kind"],
+        "string"
+    );
+    assert_eq!(
+        v["data"]["template"]["document_inputs"][0]["required"],
+        true
+    );
+    assert_eq!(
+        v["data"]["template"]["document_inputs"][1]["required"],
+        false
+    );
+    let allowed: Vec<&str> = v["data"]["template"]["allowed_components"]
+        .as_array()
+        .expect("allowed_components array")
+        .iter()
+        .map(|c| c.as_str().expect("component name string"))
+        .collect();
+    assert_eq!(allowed, vec!["cover-page", "section-title"]);
+}
+
+/// `ndoc template show <bare-id>` resolves to `{id}.ndoct.typ` in the cwd.
+#[test]
+fn e2e_template_show_resolves_bare_id() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let body =
+        "/*---\ntemplateId: report\ndocumentInputs:\n  - name: heading\n    type: string\n---*/\n";
+    std::fs::write(tmp.path().join("report.ndoct.typ"), body).expect("write template");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .current_dir(tmp.path())
+        .args(["template", "show", "report"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("report"))
+        .stdout(predicate::str::contains("heading: string (required)"));
+}
+
+/// `ndoc template show <missing>` exits non-zero and names the offending path.
+#[test]
+fn e2e_template_show_unknown() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("ghost.ndoct.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["template", "show", &abs(&ghost)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("ghost.ndoct.typ"));
+}
+
+// ---------------------------------------------------------------------------
+// T6: item load / validate subcommands
+// ---------------------------------------------------------------------------
+
+/// A component schema (`project`) plus a conforming item, written into `dir`.
+///
+/// `title` is required; `logo` is an optional image. Used by the item tests to
+/// build a self-describing items directory (schema + items side by side).
+fn write_project_schema(dir: &Path) {
+    let schema = "/*---\n\
+        componentId: project\n\
+        inputs:\n\
+        \x20 - name: title\n\
+        \x20   type: string\n\
+        \x20 - name: logo\n\
+        \x20   type: image\n\
+        \x20   required: false\n\
+        ---*/\n";
+    std::fs::write(dir.join("project.ncmp.typ"), schema).expect("write project schema");
+}
+
+/// `ndoc item load <dir>` summarises the collections found and exits 0.
+#[test]
+fn e2e_item_load() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let item = "---\n$schema: project\n$collection: projects\ntitle: Northwind\n---\n";
+    std::fs::write(tmp.path().join("northwind.item.md"), item).expect("write item");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["item", "load", &abs(tmp.path())])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("projects: 1 items"));
+}
+
+/// `ndoc item load <dir> --json` emits a structured collections summary.
+#[test]
+fn e2e_item_load_json() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let item = "---\n$schema: project\n$collection: projects\ntitle: Northwind\n---\n";
+    std::fs::write(tmp.path().join("a.item.md"), item).expect("write item a");
+    std::fs::write(tmp.path().join("b.item.md"), item).expect("write item b");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "item", "load", &abs(tmp.path())])
+        .output()
+        .expect("command runs");
+
+    assert!(output.status.success(), "load --json must exit 0");
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok");
+    assert_eq!(v["data"]["collections"][0]["collection"], "projects");
+    assert_eq!(v["data"]["collections"][0]["items"], 2);
+}
+
+/// `ndoc item validate <dir>` exits 0 when every item conforms to its schema.
+#[test]
+fn e2e_item_validate_ok() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    write_project_schema(tmp.path());
+    let item = "---\n$schema: project\n$collection: projects\ntitle: Northwind\n---\n";
+    std::fs::write(tmp.path().join("ok.item.md"), item).expect("write item");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["item", "validate", &abs(tmp.path())])
+        .assert()
+        .success();
+}
+
+/// `ndoc item validate <dir>` reports the violation with its source location and
+/// exits non-zero when an item is missing a required input.
+#[test]
+fn e2e_item_validate_fail() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    write_project_schema(tmp.path());
+    // Missing the required `title` input.
+    let item = "---\n$schema: project\n$collection: projects\n---\n";
+    std::fs::write(tmp.path().join("broken.item.md"), item).expect("write item");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["item", "validate", &abs(tmp.path())])
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("broken.item.md"))
+        .stdout(predicate::str::contains("missing-input"))
+        .stdout(predicate::str::contains("title"));
+}
+
+/// `ndoc item validate <dir> --json` emits a `valid` flag plus an issues array.
+#[test]
+fn e2e_item_validate_json() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    write_project_schema(tmp.path());
+    let item = "---\n$schema: project\n$collection: projects\n---\n";
+    std::fs::write(tmp.path().join("broken.item.md"), item).expect("write item");
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["--json", "item", "validate", &abs(tmp.path())])
+        .output()
+        .expect("command runs");
+
+    assert!(
+        !output.status.success(),
+        "validate with issues must exit non-zero"
+    );
+    let v = parse_json(&output.stdout);
+    assert_eq!(v["status"], "ok");
+    assert_eq!(v["data"]["valid"], false);
+    assert_eq!(v["data"]["issues"][0]["code"], "missing-input");
+}
+
+/// `ndoc item load <missing-dir>` exits non-zero with the offending path.
+#[test]
+fn e2e_item_missing_dir() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let ghost = tmp.path().join("nonexistent");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["item", "load", &abs(&ghost)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nonexistent"));
 }
 
 /// `ndoc add` without `--content-file` reads entry content from stdin — covers
@@ -1047,4 +1486,823 @@ fn release_smoke_test() {
         expected_pdf.metadata().expect("PDF metadata").len() > 0,
         "release `ndoc build` must produce a non-empty PDF"
     );
+}
+
+// ---------------------------------------------------------------------------
+// T7: image add subcommand
+// ---------------------------------------------------------------------------
+
+/// Seed an empty four-section `.ndoc.typ` document at `path`.
+fn write_empty_document(path: &Path) {
+    let doc = northdoc::model::Document {
+        template: "article".to_string(),
+        inputs: std::collections::BTreeMap::new(),
+        nodes: Vec::new(),
+        images: Vec::new(),
+    };
+    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+}
+
+/// `ndoc image add` records the image in the manifest and exits 0.
+#[test]
+fn e2e_image_add() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let img = tmp.path().join("logo.png");
+    write_empty_document(&doc);
+    std::fs::write(&img, b"PNGBYTES").expect("write image");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["image", "add", &abs(&doc), &abs(&img)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("logo.png"));
+
+    let back = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(back.images.len(), 1);
+    assert_eq!(back.images[0].name, "logo.png");
+}
+
+/// Re-embedding identical content is idempotent (no duplicate manifest entry).
+#[test]
+fn e2e_image_add_idempotent() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let img = tmp.path().join("logo.png");
+    write_empty_document(&doc);
+    std::fs::write(&img, b"SAMECONTENT").expect("write image");
+
+    for _ in 0..2 {
+        Command::cargo_bin("ndoc")
+            .expect("ndoc binary builds")
+            .args(["image", "add", &abs(&doc), &abs(&img)])
+            .assert()
+            .success();
+    }
+
+    let back = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(
+        back.images.len(),
+        1,
+        "re-embedding identical content must not duplicate the manifest entry"
+    );
+}
+
+/// `--json` emits the ok envelope carrying the embedded image's name and hash.
+#[test]
+fn e2e_image_add_json_envelope() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    let img = tmp.path().join("logo.png");
+    write_empty_document(&doc);
+    std::fs::write(&img, b"PNGBYTES").expect("write image");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["image", "add", "--json", &abs(&doc), &abs(&img)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains(r#""name":"logo.png""#));
+}
+
+/// A non-`.ndoc.typ` target exits non-zero with a clear message.
+#[test]
+fn e2e_image_add_unsupported_target() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let target = tmp.path().join("component.ncmp.typ");
+    let img = tmp.path().join("logo.png");
+    std::fs::write(&target, "/*---\ncomponentId: x\n---*/\n").expect("write target");
+    std::fs::write(&img, b"PNGBYTES").expect("write image");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["image", "add", &abs(&target), &abs(&img)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unsupported target"));
+}
+
+/// A missing image file exits non-zero with the offending path named.
+#[test]
+fn e2e_image_add_missing_image() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+    let missing = tmp.path().join("nope.png");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["image", "add", &abs(&doc), &abs(&missing)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nope.png"));
+}
+
+/// Path to the bundled template fixture used by `doc new` tests.
+fn template_fixture() -> std::path::PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/template_show.ndoct.typ")
+}
+
+/// `ndoc doc new <template> -o <path>` creates a template-bound document.
+#[test]
+fn e2e_doc_new() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("proposal.ndoc.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "new", &abs(&template_fixture()), "-o", &abs(&out)])
+        .assert()
+        .success();
+
+    let doc = northdoc::authoring::doc_state::read_document(&out).expect("read created doc");
+    assert_eq!(
+        doc.template, "fee-proposal",
+        "document is bound to template"
+    );
+    assert!(doc.nodes.is_empty(), "new document starts empty");
+}
+
+/// `--json` reports the created path in the ok envelope.
+#[test]
+fn e2e_doc_new_json_envelope() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("proposal.ndoc.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "new",
+            "--json",
+            &abs(&template_fixture()),
+            "-o",
+            &abs(&out),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains("proposal.ndoc.typ"));
+}
+
+/// `doc new` refuses to overwrite an existing output path.
+#[test]
+fn e2e_doc_new_refuses_overwrite() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("exists.ndoc.typ");
+    std::fs::write(&out, "// pre-existing").expect("seed existing file");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "new", &abs(&template_fixture()), "-o", &abs(&out)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("refusing to overwrite"));
+}
+
+/// An unknown template id exits non-zero with the offending path named.
+#[test]
+fn e2e_doc_new_unknown_template() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let out = tmp.path().join("out.ndoc.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "new", "nonexistent-template", "-o", &abs(&out)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nonexistent-template.ndoct.typ"));
+}
+
+/// Seed a four-section document with a nested node tree for outline tests.
+fn write_document_with_nodes(path: &Path) {
+    use northdoc::model::{Document, Node, NodeId};
+    let doc = Document {
+        template: "fee-proposal".to_string(),
+        inputs: std::collections::BTreeMap::new(),
+        nodes: vec![Node {
+            id: NodeId("section-aabb".to_string()),
+            component: "section".to_string(),
+            inputs: std::collections::BTreeMap::new(),
+            children: vec![Node {
+                id: NodeId("para-0001".to_string()),
+                component: "paragraph".to_string(),
+                inputs: std::collections::BTreeMap::new(),
+                children: Vec::new(),
+            }],
+        }],
+        images: Vec::new(),
+    };
+    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+}
+
+/// `ndoc doc outline` prints node ids, component types, and nesting in order.
+#[test]
+fn e2e_doc_outline() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "outline", &abs(&doc)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("section-aabb (section)"))
+        .stdout(predicate::str::contains("  para-0001 (paragraph)"));
+}
+
+/// `--json` emits a structured node tree (id + component + nested children).
+#[test]
+fn e2e_doc_outline_json_tree() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "outline", "--json", &abs(&doc)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""id":"section-aabb""#))
+        .stdout(predicate::str::contains(r#""component":"section""#))
+        .stdout(predicate::str::contains(r#""id":"para-0001""#));
+}
+
+/// The human-readable outline rendering is frozen so the addressing format
+/// (stable id + component + two-space-per-depth nesting) cannot drift silently.
+#[test]
+fn snapshot_doc_outline() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    let output = Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "outline", &abs(&doc)])
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let rendered = String::from_utf8(output).expect("outline output is utf-8");
+    insta::assert_snapshot!(rendered);
+}
+
+/// A missing document exits non-zero with the offending path named.
+#[test]
+fn e2e_doc_outline_missing() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let missing = tmp.path().join("nope.ndoc.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "outline", &abs(&missing)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nope.ndoc.typ"));
+}
+
+/// `ndoc doc add --type <component>` mints a node at the root and reports its id.
+#[test]
+fn e2e_doc_add_at_root() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "add", &abs(&doc), "--type", "heading"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("heading-"));
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(read.nodes.len(), 1, "one root node was added");
+    assert_eq!(read.nodes[0].component, "heading");
+}
+
+/// `--json` reports the freshly minted node id in the ok envelope.
+#[test]
+fn e2e_doc_add_json_envelope() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "add", "--json", &abs(&doc), "--type", "paragraph"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains(r#""node_id":"paragraph-"#));
+}
+
+/// `--parent <id>` nests the new node under an existing node; `--inputs` seeds it.
+#[test]
+fn e2e_doc_add_under_parent_with_inputs() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+
+    // Seed a root node, then nest a child under it.
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "add", &abs(&doc), "--type", "heading"])
+        .assert()
+        .success();
+    let parent_id = northdoc::authoring::doc_state::read_document(&doc)
+        .expect("read back")
+        .nodes[0]
+        .id
+        .0
+        .clone();
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "paragraph",
+            "--parent",
+            &parent_id,
+            "--inputs",
+            "text=hello",
+        ])
+        .assert()
+        .success();
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(read.nodes.len(), 1, "still one root node");
+    let child = &read.nodes[0].children[0];
+    assert_eq!(child.component, "paragraph");
+    assert_eq!(
+        child.inputs.get("text").map(|v| &v.value),
+        Some(&serde_json::Value::String("hello".to_string())),
+        "seed input is stored"
+    );
+}
+
+/// An unknown component type leaves the document unchanged and exits non-zero.
+#[test]
+fn e2e_doc_add_unknown_type() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "add", &abs(&doc), "--type", "bogus-component"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown component type"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// `--before` and `--after` insert siblings on the correct side of a target.
+#[test]
+fn e2e_doc_add_sibling_placement() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    // Tree starts as root [section-aabb]. Insert a heading after it...
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "heading",
+            "--after",
+            "section-aabb",
+        ])
+        .assert()
+        .success();
+    // ...and a paragraph before it.
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "paragraph",
+            "--before",
+            "section-aabb",
+        ])
+        .assert()
+        .success();
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let order: Vec<&str> = read.nodes.iter().map(|n| n.component.as_str()).collect();
+    assert_eq!(
+        order,
+        vec!["paragraph", "section", "heading"],
+        "before/after place siblings on the expected side of the target"
+    );
+}
+
+/// An unknown placement target leaves the document unchanged and exits non-zero.
+#[test]
+fn e2e_doc_add_unknown_parent() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "heading",
+            "--parent",
+            "missing-1234",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown parent node id"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// `ndoc doc remove <id>` (default) drops the node but promotes its children.
+#[test]
+fn e2e_doc_remove_preserves_children() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "remove", &abs(&doc), "section-aabb"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("removed section-aabb"));
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(read.nodes.len(), 1, "child was promoted to root");
+    assert_eq!(
+        read.nodes[0].id.0, "para-0001",
+        "the preserved child takes the removed node's place"
+    );
+}
+
+/// `--with-children` drops the node and its whole subtree.
+#[test]
+fn e2e_doc_remove_with_children() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "remove",
+            &abs(&doc),
+            "section-aabb",
+            "--with-children",
+        ])
+        .assert()
+        .success();
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert!(read.nodes.is_empty(), "whole subtree was dropped");
+}
+
+/// An unknown node id leaves the document unchanged and exits non-zero.
+#[test]
+fn e2e_doc_remove_unknown() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "remove", &abs(&doc), "ghost-9999"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown node id"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// Seed a document with a single built-in `heading` node (`level: number`,
+/// `text: content`) so `doc set` can validate against a real component schema.
+fn write_document_with_heading(path: &Path) {
+    use northdoc::model::{Document, Node, NodeId};
+    let doc = Document {
+        template: "default".to_string(),
+        inputs: std::collections::BTreeMap::new(),
+        nodes: vec![Node {
+            id: NodeId("heading-1234".to_string()),
+            component: "heading".to_string(),
+            inputs: std::collections::BTreeMap::new(),
+            children: Vec::new(),
+        }],
+        images: Vec::new(),
+    };
+    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+}
+
+/// `ndoc doc set <node> --key --value` coerces the value to the declared kind.
+#[test]
+fn e2e_doc_set_node_input() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "heading-1234",
+            "--key",
+            "level",
+            "--value",
+            "2",
+        ])
+        .assert()
+        .success();
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let input = &read.nodes[0].inputs["level"];
+    assert_eq!(input.kind, northdoc::model::InputKind::Number);
+    assert_eq!(input.value, serde_json::json!(2.0));
+}
+
+/// `--document` targets a document-level input validated against the template.
+#[test]
+fn e2e_doc_set_document_input() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "--document",
+            "--key",
+            "title",
+            "--value",
+            "My Doc",
+        ])
+        .assert()
+        .success();
+
+    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    assert_eq!(read.inputs["title"].value, serde_json::json!("My Doc"));
+}
+
+/// `--json` emits the ok envelope carrying the target, key, and value.
+#[test]
+fn e2e_doc_set_json_envelope() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            "--json",
+            &abs(&doc),
+            "heading-1234",
+            "--key",
+            "text",
+            "--value",
+            "Hello",
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains(r#""key":"text""#));
+}
+
+/// A value that does not match the declared kind leaves the document unchanged.
+#[test]
+fn e2e_doc_set_kind_mismatch() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    // `level` is a number; a non-numeric value must be rejected.
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "heading-1234",
+            "--key",
+            "level",
+            "--value",
+            "not-a-number",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not a valid number"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// An input key absent from the schema leaves the document unchanged.
+#[test]
+fn e2e_doc_set_unknown_key() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "heading-1234",
+            "--key",
+            "nonsense",
+            "--value",
+            "x",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not in the schema"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// An unknown node id leaves the document unchanged and exits non-zero.
+#[test]
+fn e2e_doc_set_unknown_node() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "ghost-9999",
+            "--key",
+            "text",
+            "--value",
+            "x",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown node id"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// Choosing both a node id and `--document` (or neither) is rejected.
+#[test]
+fn e2e_doc_set_requires_one_target() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_heading(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "set",
+            &abs(&doc),
+            "heading-1234",
+            "--document",
+            "--key",
+            "text",
+            "--value",
+            "x",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("exactly one target"));
+}
+
+/// `ndoc doc schema <component>` reports the component's declared inputs.
+#[test]
+fn e2e_doc_schema_component() {
+    let fixture =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/component_schema.ncmp.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "schema", &abs(&fixture)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("component: hero-banner"))
+        .stdout(predicate::str::contains("title: string (required)"))
+        .stdout(predicate::str::contains("subtitle: content (optional)"));
+}
+
+/// `ndoc doc schema <template>` reports the template's document inputs (JSON).
+#[test]
+fn e2e_doc_schema_template() {
+    let fixture =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/template_show.ndoct.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "schema", "--json", &abs(&fixture)])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains(r#""name":"fee-proposal""#));
+}
+
+/// An unreadable schema target exits non-zero with the offending path named.
+#[test]
+fn e2e_doc_schema_missing() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let missing = tmp.path().join("nope.ncmp.typ");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["doc", "schema", &abs(&missing)])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("nope.ncmp.typ"));
+}
+
+/// No in-scope command may print the legacy "scaffolded but not yet implemented"
+/// message, on either the success or the failure path. Each command is invoked
+/// so its body actually runs (a bare path argument that does not exist drives
+/// every command into a real error branch rather than an arg-parse error), and
+/// the scaffold phrase is asserted absent from both stdout and stderr. This is a
+/// behavioural regression guard against any command being re-stubbed.
+#[test]
+fn no_scaffold_message_anywhere() {
+    const SCAFFOLD: &str = "scaffolded but not yet implemented";
+
+    // Every in-scope command group, each driven into its command body with a
+    // single non-existent path/argument that forces a real (non-arg-parse) path.
+    let invocations: &[&[&str]] = &[
+        &["render", "missing.ndoc.typ"],
+        &["component", "schema", "missing.ncmp.typ"],
+        &["component", "list", "missing-dir"],
+        &["template", "show", "missing.ndoct.typ"],
+        &["item", "load", "missing-dir"],
+        &["item", "validate", "missing-dir"],
+        &["image", "add", "missing.ndoc.typ", "missing.png"],
+        &["doc", "new", "missing.ndoct.typ"],
+        &["doc", "outline", "missing.ndoc.typ"],
+        &["doc", "add", "missing.ndoc.typ", "--type", "heading"],
+        &["doc", "remove", "missing.ndoc.typ", "heading-0000"],
+        &[
+            "doc",
+            "set",
+            "missing.ndoc.typ",
+            "heading-0000",
+            "--key",
+            "k",
+            "--value",
+            "v",
+        ],
+        &["doc", "schema", "missing.ncmp.typ"],
+    ];
+
+    for argv in invocations {
+        let output = Command::cargo_bin("ndoc")
+            .expect("ndoc binary builds")
+            .args(*argv)
+            .output()
+            .expect("command runs");
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(
+            !stdout.contains(SCAFFOLD) && !stderr.contains(SCAFFOLD),
+            "command {argv:?} emitted the scaffold message:\nstdout: {stdout}\nstderr: {stderr}"
+        );
+    }
 }

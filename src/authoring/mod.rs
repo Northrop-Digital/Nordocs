@@ -11,6 +11,7 @@
 //! The [`ndoc`] sub-module provides the transactional helpers for the P2
 //! document authoring commands (`ndoc new`, `ndoc add`, `ndoc edit`).
 
+pub mod doc_state;
 pub mod ndoc;
 
 use crate::error::Result;

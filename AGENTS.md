@@ -37,7 +37,7 @@ b. **Unit tests live in the same file as the code** — place `#[cfg(test)]` mod
 
 c. **Snapshot tests via `insta` for Typst output** — every Markdown feature processed by `markdown.rs` (tables, task lists, footnotes, strikethrough, etc.) and every fat-file composition path must have a snapshot test using `insta::assert_snapshot!`.
 
-d. **CLI E2E tests via `assert_cmd` for every command** — every public `ndoc` subcommand (`build`, `new`, `add`, `edit`, `validate`, `preview`) must have at least one `assert_cmd` test in `tests/cli.rs` covering a success path and a failure path.
+d. **CLI E2E tests via `assert_cmd` for every command** — every public `ndoc` subcommand (`render`, `build`, `new`, `add`, `edit`, `validate`, `preview`, the `doc` subgroup, `component`, `item`, `template`, `image`) must have at least one `assert_cmd` test in `tests/cli.rs` covering a success path and a failure path.
 
 e. **No test may invoke an external `typst` binary** — all rendering must go through the embedded `typst` compiler. Tests that shell out to an external process are prohibited.
 
@@ -65,11 +65,36 @@ When snapshot tests fail because output has changed, review the diff with `cargo
 
 ## ndoc CLI commands
 
+The command surface is complete (no stubs). `--json` is a global flag on every
+command — see `README.md` for the full flag/output reference.
+
 ```sh
-ndoc build <file.ndoc.typ>    # compile fat file to PDF
-ndoc render <file.typ>        # compile raw Typst to PDF
-ndoc validate <file>          # validate .ndoc.typ or .md file; exits 1 with violations on failure
-ndoc preview <file>           # render to temp PDF and open in OS default viewer
+# Render & build
+ndoc render <file>            # compile .ncmp.typ / .ndoct.typ / .ndoc.typ to PDF (-o overrides)
+ndoc build <file>             # compile .md or .ndoc.typ to PDF
+ndoc validate <file>          # validate .ndoc.typ or .md; exits 1 with violations
+ndoc preview <file>           # render .ndoc.typ or .md to temp PDF and open in OS viewer
+
+# Fat-file entry authoring
+ndoc new <path>               # create an empty .ndoc.typ document
+ndoc add <doc> <name>         # add a named entry (--kind component|template, --content-file)
+ndoc edit <doc> <name>        # replace a named entry's content (--content-file)
+
+# Node-tree authoring (doc subgroup)
+ndoc doc new <template>       # create a .ndoc.typ bound to a template (-o; refuses overwrite)
+ndoc doc outline <doc>        # print the node tree (stable ids + component types)
+ndoc doc add <doc> --type T   # mint a node (--parent/--before/--after, --inputs KEY=VALUE)
+ndoc doc remove <doc> <id>    # remove a node (--with-children drops the subtree)
+ndoc doc set <doc> [<id>]     # set a schema-validated input (--document, --key, --value)
+ndoc doc schema <target>      # show declared inputs for a .ncmp.typ / .ndoct.typ file
+
+# Library introspection
+ndoc component schema <file>  # show one component's input schema
+ndoc component list <dir>     # list every *.ncmp.typ in a directory
+ndoc template show <id|path>  # show a template's document inputs + permitted components
+ndoc item load <dir>          # summarise *.item.md collections
+ndoc item validate <dir>      # validate items against sibling *.ncmp.typ schemas (exits 1 on issues)
+ndoc image add <doc> <image>  # embed an image into a .ndoc.typ (deduped by blake3)
 ```
 
 Set `NDOC_NO_OPEN=1` to skip viewer spawn in headless/CI environments (PDF is still

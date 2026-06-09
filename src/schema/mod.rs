@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::model::InputKind;
 
+pub mod parse;
+
 /// A single declared input on a component or template.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct InputSchema {

@@ -22,6 +22,9 @@ thiserror = "2"
 # Content hashing (cross-run-stable per-entry fingerprints)
 blake3 = "1"
 
+# Base64 encoding for embedded image bytes in the IMAGES section
+base64 = "0.22"
+
 # Serialization (JSON prelude / --json envelope / YAML frontmatter)
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
