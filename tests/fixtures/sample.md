@@ -4,7 +4,7 @@ A fixture for the `ndoc build` end-to-end tests.
 
 ## Overview
 
-northdoc compiles Markdown to PDF via an embedded Typst engine.[^1]
+nordocs compiles Markdown to PDF via an embedded Typst engine.[^1]
 
 ## Feature Matrix
 

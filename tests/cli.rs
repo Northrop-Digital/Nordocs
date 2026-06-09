@@ -1622,13 +1622,13 @@ fn write_composed_document(path: &Path) {
 
 /// Seed an empty four-section `.ndoc.typ` document at `path`.
 fn write_empty_document(path: &Path) {
-    let doc = northdoc::model::Document {
+    let doc = nordocs::model::Document {
         template: "article".to_string(),
         inputs: std::collections::BTreeMap::new(),
         nodes: Vec::new(),
         images: Vec::new(),
     };
-    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+    nordocs::authoring::doc_state::write_document(path, &doc).expect("seed document");
 }
 
 /// `ndoc image add` records the image in the manifest and exits 0.
@@ -1647,7 +1647,7 @@ fn e2e_image_add() {
         .success()
         .stdout(predicate::str::contains("logo.png"));
 
-    let back = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let back = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(back.images.len(), 1);
     assert_eq!(back.images[0].name, "logo.png");
 }
@@ -1669,7 +1669,7 @@ fn e2e_image_add_idempotent() {
             .success();
     }
 
-    let back = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let back = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(
         back.images.len(),
         1,
@@ -1745,7 +1745,7 @@ fn e2e_doc_new() {
         .assert()
         .success();
 
-    let doc = northdoc::authoring::doc_state::read_document(&out).expect("read created doc");
+    let doc = nordocs::authoring::doc_state::read_document(&out).expect("read created doc");
     assert_eq!(
         doc.template, "fee-proposal",
         "document is bound to template"
@@ -1806,7 +1806,7 @@ fn e2e_doc_new_unknown_template() {
 
 /// Seed a four-section document with a nested node tree for outline tests.
 fn write_document_with_nodes(path: &Path) {
-    use northdoc::model::{Document, Node, NodeId};
+    use nordocs::model::{Document, Node, NodeId};
     let doc = Document {
         template: "fee-proposal".to_string(),
         inputs: std::collections::BTreeMap::new(),
@@ -1823,7 +1823,7 @@ fn write_document_with_nodes(path: &Path) {
         }],
         images: Vec::new(),
     };
-    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+    nordocs::authoring::doc_state::write_document(path, &doc).expect("seed document");
 }
 
 /// `ndoc doc outline` prints node ids, component types, and nesting in order.
@@ -1907,7 +1907,7 @@ fn e2e_doc_add_at_root() {
         .success()
         .stdout(predicate::str::contains("heading-"));
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(read.nodes.len(), 1, "one root node was added");
     assert_eq!(read.nodes[0].component, "heading");
 }
@@ -1941,7 +1941,7 @@ fn e2e_doc_add_under_parent_with_inputs() {
         .args(["doc", "add", &abs(&doc), "--type", "heading"])
         .assert()
         .success();
-    let parent_id = northdoc::authoring::doc_state::read_document(&doc)
+    let parent_id = nordocs::authoring::doc_state::read_document(&doc)
         .expect("read back")
         .nodes[0]
         .id
@@ -1964,7 +1964,7 @@ fn e2e_doc_add_under_parent_with_inputs() {
         .assert()
         .success();
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(read.nodes.len(), 1, "still one root node");
     let child = &read.nodes[0].children[0];
     assert_eq!(child.component, "paragraph");
@@ -2030,7 +2030,7 @@ fn e2e_doc_add_sibling_placement() {
         .assert()
         .success();
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     let order: Vec<&str> = read.nodes.iter().map(|n| n.component.as_str()).collect();
     assert_eq!(
         order,
@@ -2080,7 +2080,7 @@ fn e2e_doc_remove_preserves_children() {
         .success()
         .stdout(predicate::str::contains("removed section-aabb"));
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(read.nodes.len(), 1, "child was promoted to root");
     assert_eq!(
         read.nodes[0].id.0, "para-0001",
@@ -2107,7 +2107,7 @@ fn e2e_doc_remove_with_children() {
         .assert()
         .success();
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert!(read.nodes.is_empty(), "whole subtree was dropped");
 }
 
@@ -2133,7 +2133,7 @@ fn e2e_doc_remove_unknown() {
 /// Seed a document with a single built-in `heading` node (`level: number`,
 /// `text: content`) so `doc set` can validate against a real component schema.
 fn write_document_with_heading(path: &Path) {
-    use northdoc::model::{Document, Node, NodeId};
+    use nordocs::model::{Document, Node, NodeId};
     let doc = Document {
         template: "default".to_string(),
         inputs: std::collections::BTreeMap::new(),
@@ -2145,7 +2145,7 @@ fn write_document_with_heading(path: &Path) {
         }],
         images: Vec::new(),
     };
-    northdoc::authoring::doc_state::write_document(path, &doc).expect("seed document");
+    nordocs::authoring::doc_state::write_document(path, &doc).expect("seed document");
 }
 
 /// `ndoc doc set <node> --key --value` coerces the value to the declared kind.
@@ -2170,9 +2170,9 @@ fn e2e_doc_set_node_input() {
         .assert()
         .success();
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     let input = &read.nodes[0].inputs["level"];
-    assert_eq!(input.kind, northdoc::model::InputKind::Number);
+    assert_eq!(input.kind, nordocs::model::InputKind::Number);
     assert_eq!(input.value, serde_json::json!(2.0));
 }
 
@@ -2198,7 +2198,7 @@ fn e2e_doc_set_document_input() {
         .assert()
         .success();
 
-    let read = northdoc::authoring::doc_state::read_document(&doc).expect("read back");
+    let read = nordocs::authoring::doc_state::read_document(&doc).expect("read back");
     assert_eq!(read.inputs["title"].value, serde_json::json!("My Doc"));
 }
 

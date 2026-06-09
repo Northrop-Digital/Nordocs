@@ -1,15 +1,15 @@
 //! High-level compile/export wrapper.
 //!
 //! Wraps [`typst::compile`] + [`typst_pdf::pdf`] into a single `.typ` -> PDF
-//! bytes operation over our [`NorthdocWorld`]. Diagnostics are flattened into
+//! bytes operation over our [`NordocsWorld`]. Diagnostics are flattened into
 //! [`Error::Compile`].
 
 use crate::error::{Error, Result};
-use crate::typst_world::NorthdocWorld;
+use crate::typst_world::NordocsWorld;
 
 /// Compile a composed `.typ` source string into PDF bytes.
 ///
-/// Builds a fresh [`NorthdocWorld`], runs the Typst compiler, and exports to
+/// Builds a fresh [`NordocsWorld`], runs the Typst compiler, and exports to
 /// PDF. Compilation warnings are currently discarded; surface them once the
 /// CLI grows a diagnostics channel.
 pub fn compile_to_pdf(main_source: &str) -> Result<Vec<u8>> {
@@ -24,7 +24,7 @@ pub fn compile_to_pdf_with_images(
     main_source: &str,
     images: &[(String, Vec<u8>)],
 ) -> Result<Vec<u8>> {
-    let mut world = NorthdocWorld::new(main_source.to_owned());
+    let mut world = NordocsWorld::new(main_source.to_owned());
     for (name, bytes) in images {
         world.insert_file(
             &format!("images/{name}"),
@@ -38,16 +38,16 @@ fn compile_to_pdf_with_options(
     main_source: &str,
     pdf_options: &typst_pdf::PdfOptions,
 ) -> Result<Vec<u8>> {
-    let world = NorthdocWorld::new(main_source.to_owned());
+    let world = NordocsWorld::new(main_source.to_owned());
     compile_world(&world, pdf_options)
 }
 
-/// Compile a fully-prepared [`NorthdocWorld`] and export to PDF bytes.
+/// Compile a fully-prepared [`NordocsWorld`] and export to PDF bytes.
 ///
 /// Shared by every entry point so image-overlay and bare-source compiles run
 /// the identical compile/export path. Compilation warnings are currently
 /// discarded; surface them once the CLI grows a diagnostics channel.
-fn compile_world(world: &NorthdocWorld, pdf_options: &typst_pdf::PdfOptions) -> Result<Vec<u8>> {
+fn compile_world(world: &NordocsWorld, pdf_options: &typst_pdf::PdfOptions) -> Result<Vec<u8>> {
     let compiled = typst::compile::<typst::layout::PagedDocument>(world);
     let document = compiled.output.map_err(|diags| {
         let msg = diags
@@ -68,7 +68,7 @@ fn compile_world(world: &NorthdocWorld, pdf_options: &typst_pdf::PdfOptions) -> 
     })?;
 
     // Keep the incremental cache bounded between invocations.
-    NorthdocWorld::evict_cache(5);
+    NordocsWorld::evict_cache(5);
 
     Ok(pdf)
 }

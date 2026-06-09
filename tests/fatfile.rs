@@ -1,6 +1,6 @@
 //! Snapshot tests for fat-file composition.
 
-use northdoc::fatfile::{compose, FatFileSections};
+use nordocs::fatfile::{compose, FatFileSections};
 
 /// Composing a minimal fat file produces a stable, section-delimited `.typ`.
 #[test]

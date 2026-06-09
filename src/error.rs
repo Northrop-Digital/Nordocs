@@ -7,10 +7,10 @@
 
 use thiserror::Error;
 
-/// Convenience alias for results returned by northdoc library functions.
+/// Convenience alias for results returned by nordocs library functions.
 pub type Result<T> = std::result::Result<T, Error>;
 
-/// Top-level typed error for the northdoc library.
+/// Top-level typed error for the nordocs library.
 #[derive(Debug, Error)]
 pub enum Error {
     /// A document authoring operation failed (compose, patch, set, etc.).

@@ -1,4 +1,4 @@
-//! `ndoc` — northdoc CLI entrypoint.
+//! `ndoc` — nordocs CLI entrypoint.
 //!
 //! Thin binary shell: parse args with clap, dispatch into the [`cli`] module,
 //! and map any error into a process exit code. All real logic lives in the
@@ -8,8 +8,8 @@ use std::process::ExitCode;
 
 use clap::Parser;
 
-use northdoc::cli::output::emit_json_error;
-use northdoc::cli::Cli;
+use nordocs::cli::output::emit_json_error;
+use nordocs::cli::Cli;
 
 fn main() -> ExitCode {
     let cli = Cli::parse();

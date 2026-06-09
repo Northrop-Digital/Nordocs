@@ -4,7 +4,7 @@
 //! constructs. Run `cargo insta review` after updating the implementation to
 //! review and accept new snapshots.
 
-use northdoc::markdown::markdown_to_typst;
+use nordocs::markdown::markdown_to_typst;
 
 fn convert(md: &str) -> String {
     markdown_to_typst(md).expect("conversion should not fail")

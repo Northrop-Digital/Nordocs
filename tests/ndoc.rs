@@ -4,7 +4,7 @@
 //! and multi-entry documents.  Unit tests verify round-trip parse/compose
 //! symmetry and hash-based change detection.
 
-use northdoc::fatfile::ndoc::{compute_entry_hash, EntryKind, NdocDocument, NdocEntry};
+use nordocs::fatfile::ndoc::{compute_entry_hash, EntryKind, NdocDocument, NdocEntry};
 
 fn component(name: &str, content: &str) -> NdocEntry {
     NdocEntry {

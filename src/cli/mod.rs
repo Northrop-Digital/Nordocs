@@ -14,7 +14,7 @@ use clap::{Parser, Subcommand};
 
 use crate::fatfile::ndoc::EntryKind;
 
-/// northdoc — embed Typst, render Markdown/data to PDF, single binary.
+/// nordocs — embed Typst, render Markdown/data to PDF, single binary.
 #[derive(Debug, Parser)]
 #[command(name = "ndoc", version, about, long_about = None)]
 pub struct Cli {

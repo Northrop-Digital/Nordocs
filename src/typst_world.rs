@@ -27,10 +27,10 @@ use typst_kit::fonts::{FontSlot, Fonts};
 
 /// An in-memory Typst environment backed by a single composed source string.
 ///
-/// Construct via [`NorthdocWorld::new`] with the fully composed fat-file source.
+/// Construct via [`NordocsWorld::new`] with the fully composed fat-file source.
 /// Additional in-memory files (e.g. embedded images) can be registered with
-/// [`NorthdocWorld::insert_file`] before compilation.
-pub struct NorthdocWorld {
+/// [`NordocsWorld::insert_file`] before compilation.
+pub struct NordocsWorld {
     /// Standard library (definitions, styles).
     library: LazyHash<Library>,
     /// Font metadata book derived from the discovered/embedded fonts.
@@ -44,7 +44,7 @@ pub struct NorthdocWorld {
     files: HashMap<FileId, Bytes>,
 }
 
-impl NorthdocWorld {
+impl NordocsWorld {
     /// Build a world from a composed `.typ` source string.
     ///
     /// Fonts are discovered via [`typst_kit::fonts`] with the embedded
@@ -93,7 +93,7 @@ impl NorthdocWorld {
     }
 }
 
-impl World for NorthdocWorld {
+impl World for NordocsWorld {
     fn library(&self) -> &LazyHash<Library> {
         &self.library
     }
@@ -135,13 +135,13 @@ impl World for NorthdocWorld {
 
 #[cfg(test)]
 mod tests {
-    use super::NorthdocWorld;
+    use super::NordocsWorld;
     use typst::foundations::Bytes;
     use typst::World;
 
     #[test]
     fn world_new_has_main_source() {
-        let world = NorthdocWorld::new("Hello, world!");
+        let world = NordocsWorld::new("Hello, world!");
         let source = world
             .source(world.main())
             .expect("main source should exist");
@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn world_insert_file_round_trip() {
-        let mut world = NorthdocWorld::new("");
+        let mut world = NordocsWorld::new("");
         let data = Bytes::new(b"binary content".to_vec());
         let id = world.insert_file("asset.bin", data.clone());
         let retrieved = world.file(id).expect("inserted file should be retrievable");
@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn world_set_main_source_replaces() {
-        let mut world = NorthdocWorld::new("original");
+        let mut world = NordocsWorld::new("original");
         world.set_main_source("replaced");
         let source = world
             .source(world.main())
@@ -169,6 +169,6 @@ mod tests {
 
     #[test]
     fn world_evict_cache_no_panic() {
-        NorthdocWorld::evict_cache(5);
+        NordocsWorld::evict_cache(5);
     }
 }

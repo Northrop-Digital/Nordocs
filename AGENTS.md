@@ -1,10 +1,10 @@
-# AGENTS.md — northdoc
+# AGENTS.md — nordocs
 
 Guidance for AI agents working in this repository.
 
 ## What this is
 
-northdoc is a Rust-native port-and-refine of a C# Typst document toolset. It
+nordocs is a Rust-native port-and-refine of a C# Typst document toolset. It
 embeds the native `typst` crate (no external process), builds a single binary
 `ndoc`, and turns Markdown/data into PDF via a fat-file (`.ndoc.typ`) model.
 

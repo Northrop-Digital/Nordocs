@@ -1,4 +1,4 @@
-//! northdoc — a Rust-native re-implementation of the C# Typst document toolset.
+//! nordocs — a Rust-native re-implementation of the C# Typst document toolset.
 //!
 //! This crate embeds the native `typst` compiler (no external process) and
 //! exposes a CLI-first surface for the Markdown/data -> Typst -> PDF pipeline,

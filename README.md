@@ -1,6 +1,6 @@
-# northdoc
+# nordocs
 
-A Rust-native re-implementation of the C# Typst document toolset. northdoc
+A Rust-native re-implementation of the C# Typst document toolset. nordocs
 **embeds the native Typst compiler** (no external process), ships as a single
 binary (`ndoc`), and exposes a refined, CLI-first surface for turning
 Markdown/data into PDF documents.
@@ -9,7 +9,7 @@ Markdown/data into PDF documents.
 
 The previous C# tool shelled out to an external Typst binary, carried an
 organically-grown CLI with cruft, and paid .NET startup cost on every
-short-lived invocation. northdoc is a **port-and-refine**: same core
+short-lived invocation. nordocs is a **port-and-refine**: same core
 capabilities, native embedded Typst, faster startup/render, cleaner commands.
 
 ## Status
