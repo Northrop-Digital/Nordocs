@@ -18,7 +18,7 @@
 ## Project Structure
 
 ```
-NorthDoc/
+Nordocs/
 ├── Cargo.toml / Cargo.lock
 ├── .gitignore / rustfmt.toml
 ├── README.md / AGENTS.md / CLAUDE.md

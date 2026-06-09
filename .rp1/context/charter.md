@@ -1,8 +1,8 @@
-# Project Charter: northdoc
+# Project Charter: nordocs
 **Version**: 1.0.0 | **Status**: Active | **Created**: 2026-06-04T06:50:43Z
 
 ## Vision
-northdoc is a Rust-native re-implementation of the existing C# Typst document toolset that embeds Typst directly to deliver fast, single-binary document generation with a cleaner, refined CLI surface.
+nordocs is a Rust-native re-implementation of the existing C# Typst document toolset that embeds Typst directly to deliver fast, single-binary document generation with a cleaner, refined CLI surface.
 
 ## Problem & Context
 The current C# toolset has three core limitations:
@@ -22,7 +22,7 @@ Two primary user groups:
 Their core jobs are: generate documents from data and Markdown (including Markdown→Typst and rendering to PDF/output); manage a reusable library of components and templates across documents; and validate document structure and preview/render before producing the final build.
 
 ## Business Rationale
-For developers and agents generating Typst-based documents, northdoc delivers correct end-to-end document output with at least the fidelity of the C# tool, while removing the friction of the old design. By embedding the native Typst crate instead of shelling out to an external process, it ships as a single binary, starts and renders faster, and exposes a cleaner, deliberately redesigned CLI that drops accumulated cruft — a clear improvement over the awkward, externally-dependent C# toolset it replaces.
+For developers and agents generating Typst-based documents, nordocs delivers correct end-to-end document output with at least the fidelity of the C# tool, while removing the friction of the old design. By embedding the native Typst crate instead of shelling out to an external process, it ships as a single binary, starts and renders faster, and exposes a cleaner, deliberately redesigned CLI that drops accumulated cruft — a clear improvement over the awkward, externally-dependent C# toolset it replaces.
 
 ## Scope Guardrails
 ### Will Do
