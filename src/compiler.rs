@@ -16,13 +16,39 @@ pub fn compile_to_pdf(main_source: &str) -> Result<Vec<u8>> {
     compile_to_pdf_with_options(main_source, &typst_pdf::PdfOptions::default())
 }
 
+/// Compile a composed source string into PDF bytes with embedded images.
+///
+/// Each `(name, bytes)` pair is registered in the compiler's virtual filesystem
+/// at `images/{name}` so the document's `image("images/{name}")` calls resolve.
+pub fn compile_to_pdf_with_images(
+    main_source: &str,
+    images: &[(String, Vec<u8>)],
+) -> Result<Vec<u8>> {
+    let mut world = NorthdocWorld::new(main_source.to_owned());
+    for (name, bytes) in images {
+        world.insert_file(
+            &format!("images/{name}"),
+            typst::foundations::Bytes::new(bytes.clone()),
+        );
+    }
+    compile_world(&world, &typst_pdf::PdfOptions::default())
+}
+
 fn compile_to_pdf_with_options(
     main_source: &str,
     pdf_options: &typst_pdf::PdfOptions,
 ) -> Result<Vec<u8>> {
     let world = NorthdocWorld::new(main_source.to_owned());
+    compile_world(&world, pdf_options)
+}
 
-    let compiled = typst::compile::<typst::layout::PagedDocument>(&world);
+/// Compile a fully-prepared [`NorthdocWorld`] and export to PDF bytes.
+///
+/// Shared by every entry point so image-overlay and bare-source compiles run
+/// the identical compile/export path. Compilation warnings are currently
+/// discarded; surface them once the CLI grows a diagnostics channel.
+fn compile_world(world: &NorthdocWorld, pdf_options: &typst_pdf::PdfOptions) -> Result<Vec<u8>> {
+    let compiled = typst::compile::<typst::layout::PagedDocument>(world);
     let document = compiled.output.map_err(|diags| {
         let msg = diags
             .iter()

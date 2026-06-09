@@ -267,6 +267,8 @@ mod tests {
         ComponentSchema {
             name: name.to_string(),
             inputs,
+            has_body: true,
+            allowed_children: Vec::new(),
         }
     }
 

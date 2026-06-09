@@ -11,6 +11,7 @@
 //! (`// === STATE ===` vs `// === NDOC-ENTRY: ...`) so they cannot be confused
 //! during parsing.
 
+pub mod composed;
 pub mod ndoc;
 
 use crate::error::{Error, Result};

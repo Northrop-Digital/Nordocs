@@ -356,16 +356,25 @@ fn cmd_build(args: BuildArgs, json: bool) -> anyhow::Result<()> {
     let output_path = if name.ends_with(".ndoc.typ") {
         let src = std::fs::read_to_string(path)
             .with_context(|| format!("failed to read '{}'", path.display()))?;
-        let doc = crate::fatfile::ndoc::NdocDocument::parse(&src)
-            .with_context(|| format!("failed to parse document '{}'", path.display()))?;
-        let typst_source = doc
-            .entries
-            .iter()
-            .map(|e| e.content.as_str())
-            .collect::<Vec<_>>()
-            .join("\n");
-        let pdf_bytes = crate::compiler::compile_to_pdf(&typst_source)
-            .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?;
+        // `.ndoc.typ` covers two shapes: a canonical composed document (the
+        // `/*===STATE-START===` reference format, self-contained with embedded
+        // images) and the entry-format archive used by the authoring commands.
+        // Route by the file's own markers so both build to PDF.
+        let pdf_bytes = if crate::fatfile::composed::is_composed(&src) {
+            crate::fatfile::composed::render_to_pdf(&src)
+                .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?
+        } else {
+            let doc = crate::fatfile::ndoc::NdocDocument::parse(&src)
+                .with_context(|| format!("failed to parse document '{}'", path.display()))?;
+            let typst_source = doc
+                .entries
+                .iter()
+                .map(|e| e.content.as_str())
+                .collect::<Vec<_>>()
+                .join("\n");
+            crate::compiler::compile_to_pdf(&typst_source)
+                .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?
+        };
         let base = name.strip_suffix(".ndoc.typ").unwrap_or(name.as_ref());
         let out = std::path::PathBuf::from(format!("{base}.pdf"));
         std::fs::write(&out, &pdf_bytes)
@@ -447,10 +456,13 @@ fn cmd_edit(args: EditArgs, json: bool) -> anyhow::Result<()> {
 /// Validate a `.ndoc.typ` or `.md` file against the built-in schema catalogue.
 ///
 /// Dispatches to the appropriate validator by file extension, prints every
-/// violation to stdout as `{location}: {message}`, and exits with code 1 when
-/// any violation is found. Unsupported extensions bail with an actionable
-/// message before validation is attempted.
+/// issue to stdout as `[{severity}] {location}: {message}`, and exits with code
+/// 1 when any `error`-severity issue is found (warnings do not fail). Composed
+/// documents also report a summary. Unsupported extensions bail with an
+/// actionable message before validation is attempted.
 fn cmd_validate(args: ValidateArgs, json: bool) -> anyhow::Result<()> {
+    use crate::validation::Severity;
+
     let path = &args.input;
     let name = path.to_string_lossy();
 
@@ -467,19 +479,49 @@ fn cmd_validate(args: ValidateArgs, json: bool) -> anyhow::Result<()> {
         );
     };
 
+    let severity_label = |s: Severity| match s {
+        Severity::Error => "error",
+        Severity::Warning => "warning",
+    };
+
     if json {
         let violations: Vec<serde_json::Value> = result
             .violations
             .iter()
-            .map(|v| serde_json::json!({"location": v.location, "message": v.message}))
+            .map(|v| {
+                serde_json::json!({
+                    "severity": severity_label(v.severity),
+                    "code": v.code,
+                    "location": v.location,
+                    "message": v.message,
+                })
+            })
             .collect();
-        output::emit_json_result(Some(serde_json::json!({"violations": violations})));
+        let summary = result.summary.as_ref().map(|s| {
+            serde_json::json!({
+                "templateId": s.template_id,
+                "templateVersion": s.template_version,
+                "themeId": s.theme_id,
+                "nodeCount": s.node_count,
+                "globalInputCount": s.global_input_count,
+            })
+        });
+        output::emit_json_result(Some(serde_json::json!({
+            "violations": violations,
+            "summary": summary,
+            "valid": result.is_valid(),
+        })));
         if !result.is_valid() {
             std::process::exit(1);
         }
     } else {
         for v in &result.violations {
-            println!("{}: {}", v.location, v.message);
+            println!(
+                "[{}] {}: {}",
+                severity_label(v.severity),
+                v.location,
+                v.message
+            );
         }
         if !result.is_valid() {
             std::process::exit(1);
@@ -541,30 +583,40 @@ fn cmd_preview(args: PreviewArgs, json: bool) -> anyhow::Result<()> {
     let path = &args.input;
     let name = path.to_string_lossy();
 
-    let typst_source = if name.ends_with(".ndoc.typ") {
+    let pdf_bytes = if name.ends_with(".ndoc.typ") {
         let src = std::fs::read_to_string(path)
             .with_context(|| format!("failed to read '{}'", path.display()))?;
-        let doc = crate::fatfile::ndoc::NdocDocument::parse(&src)
-            .with_context(|| format!("failed to parse document '{}'", path.display()))?;
-        doc.entries
-            .iter()
-            .map(|e| e.content.as_str())
-            .collect::<Vec<_>>()
-            .join("\n")
+        // Same routing as `build`: a canonical composed document renders
+        // directly (resolving its embedded images), while an entry-format
+        // archive is parsed and its entries concatenated before compiling.
+        if crate::fatfile::composed::is_composed(&src) {
+            crate::fatfile::composed::render_to_pdf(&src)
+                .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?
+        } else {
+            let doc = crate::fatfile::ndoc::NdocDocument::parse(&src)
+                .with_context(|| format!("failed to parse document '{}'", path.display()))?;
+            let typst_source = doc
+                .entries
+                .iter()
+                .map(|e| e.content.as_str())
+                .collect::<Vec<_>>()
+                .join("\n");
+            crate::compiler::compile_to_pdf(&typst_source)
+                .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?
+        }
     } else if path.extension().and_then(|e| e.to_str()) == Some("md") {
         let markdown = std::fs::read_to_string(path)
             .with_context(|| format!("failed to read '{}'", path.display()))?;
-        crate::markdown::markdown_to_typst(&markdown)
-            .with_context(|| format!("failed to convert '{}' to Typst", path.display()))?
+        let typst_source = crate::markdown::markdown_to_typst(&markdown)
+            .with_context(|| format!("failed to convert '{}' to Typst", path.display()))?;
+        crate::compiler::compile_to_pdf(&typst_source)
+            .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?
     } else {
         anyhow::bail!(
             "unsupported input format '{}': expected a '.md' or '.ndoc.typ' file",
             path.display()
         );
     };
-
-    let pdf_bytes = crate::compiler::compile_to_pdf(&typst_source)
-        .with_context(|| format!("failed to compile '{}' to PDF", path.display()))?;
 
     let stem = path.file_stem().unwrap_or_default().to_string_lossy();
     let temp_pdf = std::env::temp_dir().join(format!("{stem}.pdf"));

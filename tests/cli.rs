@@ -89,6 +89,29 @@ fn e2e_build_help() {
         .stdout(predicate::str::contains("Input Markdown"));
 }
 
+/// `ndoc build` compiles a canonical composed `.ndoc.typ` (the reference
+/// `/*===STATE-START===` format) and resolves its embedded images.
+#[test]
+fn e2e_build_composed_document_with_embedded_image() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("composed.ndoc.typ");
+    write_composed_document(&doc);
+
+    let pdf = tmp.path().join("composed.pdf");
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .arg("build")
+        .arg(&doc)
+        .assert()
+        .success();
+
+    assert!(pdf.exists(), "expected PDF at {pdf:?} was not created");
+    assert!(
+        pdf.metadata().expect("PDF metadata").len() > 0,
+        "PDF at {pdf:?} is empty"
+    );
+}
+
 // ---------------------------------------------------------------------------
 // E2E tests for document authoring commands (ndoc new / add / edit / build)
 // ---------------------------------------------------------------------------
@@ -526,6 +549,91 @@ fn preview_unsupported_extension() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("unsupported"));
+}
+
+/// `ndoc preview <composed.ndoc.typ>` compiles the canonical composed format
+/// and exits 0 when `NDOC_NO_OPEN=1` suppresses the viewer.
+#[test]
+fn preview_composed_document_exit_zero() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("composed.ndoc.typ");
+    write_composed_document(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .env("NDOC_NO_OPEN", "1")
+        .arg("preview")
+        .arg(&doc)
+        .assert()
+        .success();
+}
+
+/// `ndoc validate <composed.ndoc.typ>` exits 0 for a well-formed composed doc.
+#[test]
+fn validate_composed_document_exit_zero() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("composed.ndoc.typ");
+    write_composed_document(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .arg("validate")
+        .arg(&doc)
+        .assert()
+        .success();
+}
+
+/// `ndoc validate` on a composed doc whose node uses an unknown component exits
+/// non-zero and reports an `[error]` against the built-in catalogue.
+#[test]
+fn validate_composed_schema_error_exit_nonzero() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("bad.ndoc.typ");
+    // `widget` is not in the built-in catalogue under the `default` template.
+    let source = "/*===STATE-START===\n\
+         {\n  \"templateId\": \"default\",\n  \"themeId\": \"th\",\n  \"nodes\": [\n    { \"id\": \"widget-1\", \"type\": \"widget\" }\n  ]\n}\n\n\
+         <document-input>\n---\ntemplateId: default\n---\n</document-input>\n\n\
+         <component-input componentId=\"widget\" instance=\"1\">\n---\n---\n</component-input>\n\
+         ===STATE-END===*/\n\
+         // ===DOCUMENT-START===\n= Doc\n";
+    std::fs::write(&doc, source).expect("write fixture");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .arg("validate")
+        .arg(&doc)
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("[error]"))
+        .stdout(
+            predicate::str::contains("component-not-allowed")
+                .or(predicate::str::contains("widget")),
+        );
+}
+
+/// `ndoc validate` on a composed doc that only triggers a missing-required-input
+/// warning still exits 0, printing `[warning]`.
+#[test]
+fn validate_composed_warning_only_exit_zero() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("warn.ndoc.typ");
+    // `heading` is a built-in component requiring `level` and `text`; omitting
+    // them yields warnings only (no errors), so validation still passes.
+    let source = "/*===STATE-START===\n\
+         {\n  \"templateId\": \"default\",\n  \"themeId\": \"th\",\n  \"nodes\": [\n    { \"id\": \"heading-1\", \"type\": \"heading\" }\n  ]\n}\n\n\
+         <document-input>\n---\ntemplateId: default\n---\n</document-input>\n\n\
+         <component-input componentId=\"heading\" instance=\"1\">\n---\n---\n</component-input>\n\
+         ===STATE-END===*/\n\
+         // ===DOCUMENT-START===\n= Doc\n";
+    std::fs::write(&doc, source).expect("write fixture");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .arg("validate")
+        .arg(&doc)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("[warning]"));
 }
 
 // ---------------------------------------------------------------------------
@@ -1491,6 +1599,26 @@ fn release_smoke_test() {
 // ---------------------------------------------------------------------------
 // T7: image add subcommand
 // ---------------------------------------------------------------------------
+
+/// Seed a minimal canonical composed `.ndoc.typ` document (the
+/// `/*===STATE-START===` reference format) with one embedded image at `path`.
+fn write_composed_document(path: &Path) {
+    use base64::Engine as _;
+
+    let svg = r##"<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="#0a0"/></svg>"##;
+    let b64 = base64::engine::general_purpose::STANDARD.encode(svg.as_bytes());
+    // `default` is a built-in template; with no nodes the document validates clean.
+    let source = format!(
+        "/*===STATE-START===\n\
+         {{\n  \"templateId\": \"default\",\n  \"themeId\": \"th\",\n  \"nodes\": [],\n  \"images\": [\n    {{ \"name\": \"logo.svg\", \"hash\": \"abc123\" }}\n  ]\n}}\n\n\
+         <document-input>\n---\ntemplateId: default\n---\n</document-input>\n\
+         ===STATE-END===*/\n\
+         /*===IMAGES-START===\n---abc123---\n{b64}\n---END---\n===IMAGES-END===*/\n\
+         // ===TEMPLATE-START===\n// ===TEMPLATE-END===\n\
+         // ===DOCUMENT-START===\n= Composed\n#image(\"images/logo.svg\", width: 10pt)\n"
+    );
+    std::fs::write(path, source).expect("seed composed document");
+}
 
 /// Seed an empty four-section `.ndoc.typ` document at `path`.
 fn write_empty_document(path: &Path) {

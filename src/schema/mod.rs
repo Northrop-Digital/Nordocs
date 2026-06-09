@@ -29,14 +29,24 @@ pub struct InputSchema {
 pub struct ComponentSchema {
     pub name: String,
     pub inputs: Vec<InputSchema>,
+    /// Whether the component accepts child nodes. A `has_body: false` (leaf)
+    /// component may not carry children. Mirrors the C# `ComponentSchema.HasBody`
+    /// and defaults to `true`.
+    pub has_body: bool,
+    /// Component names permitted as direct children. Empty means unconstrained
+    /// (any allowed component may nest). Mirrors `ComponentSchema.AllowedChildren`.
+    pub allowed_children: Vec<String>,
 }
 
 impl ComponentSchema {
-    /// Construct an empty schema for a named component.
+    /// Construct an empty schema for a named component (body-bearing, no child
+    /// restriction — the permissive defaults).
     pub fn new(name: impl Into<String>) -> Self {
         Self {
             name: name.into(),
             inputs: Vec::new(),
+            has_body: true,
+            allowed_children: Vec::new(),
         }
     }
 }
@@ -125,6 +135,8 @@ impl Catalogue {
         let components = vec![
             ComponentSchema {
                 name: "heading".to_string(),
+                has_body: true,
+                allowed_children: Vec::new(),
                 inputs: vec![
                     InputSchema {
                         name: "level".to_string(),
@@ -140,6 +152,8 @@ impl Catalogue {
             },
             ComponentSchema {
                 name: "paragraph".to_string(),
+                has_body: true,
+                allowed_children: Vec::new(),
                 inputs: vec![InputSchema {
                     name: "text".to_string(),
                     kind: InputKind::Content,
@@ -264,6 +278,8 @@ mod tests {
     fn schema_round_trip_component() {
         let schema = ComponentSchema {
             name: "heading".to_string(),
+            has_body: true,
+            allowed_children: Vec::new(),
             inputs: vec![
                 InputSchema {
                     name: "level".to_string(),

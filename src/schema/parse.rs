@@ -52,6 +52,18 @@ struct InputFile {
     required: bool,
 }
 
+/// One declared content-typed input (the `content:` list in the frontmatter).
+///
+/// Content inputs carry no `type:` key — they are markdown content by
+/// definition — so they parse separately from scalar [`InputFile`] entries and
+/// are folded in as [`InputKind::Content`].
+#[derive(Debug, Deserialize)]
+struct ContentInputFile {
+    name: String,
+    #[serde(default = "default_required")]
+    required: bool,
+}
+
 /// The frontmatter shape of a component file.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -59,6 +71,12 @@ struct ComponentFile {
     component_id: String,
     #[serde(default)]
     inputs: Vec<InputFile>,
+    #[serde(default)]
+    content: Vec<ContentInputFile>,
+    #[serde(default = "default_has_body")]
+    has_body: bool,
+    #[serde(default)]
+    allowed_children: Vec<String>,
 }
 
 /// The frontmatter shape of a template file.
@@ -76,11 +94,25 @@ fn default_required() -> bool {
     true
 }
 
+fn default_has_body() -> bool {
+    true
+}
+
 impl From<InputFile> for InputSchema {
     fn from(input: InputFile) -> Self {
         InputSchema {
             name: input.name,
             kind: input.kind,
+            required: input.required,
+        }
+    }
+}
+
+impl From<ContentInputFile> for InputSchema {
+    fn from(input: ContentInputFile) -> Self {
+        InputSchema {
+            name: input.name,
+            kind: InputKind::Content,
             required: input.required,
         }
     }
@@ -92,9 +124,17 @@ pub fn parse_component_str(content: &str) -> Result<ComponentSchema> {
         Error::Schema("component file has no '/*--- ... ---*/' frontmatter".into())
     })?;
     let file: ComponentFile = deserialize(yaml, "component")?;
+    let inputs = file
+        .inputs
+        .into_iter()
+        .map(InputSchema::from)
+        .chain(file.content.into_iter().map(InputSchema::from))
+        .collect();
     Ok(ComponentSchema {
         name: file.component_id,
-        inputs: file.inputs.into_iter().map(InputSchema::from).collect(),
+        inputs,
+        has_body: file.has_body,
+        allowed_children: file.allowed_children,
     })
 }
 
