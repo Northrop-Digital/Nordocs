@@ -50,12 +50,12 @@ jobs:
         run: cargo test --verbose
 
   msrv:
-    name: MSRV (1.85)
+    name: MSRV (1.89)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned MSRV toolchain
-        uses: dtolnay/rust-toolchain@1.85
+        uses: dtolnay/rust-toolchain@1.89
       - uses: Swatinem/rust-cache@v2
       - name: Build on minimum supported Rust version
         run: cargo build --verbose

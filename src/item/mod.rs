@@ -195,22 +195,21 @@ fn validate_item_against_schema(
                 message: format!("required input '{}' is missing", input.name),
             }),
             None => {}
-            Some(value) => {
-                if input.kind == InputKind::Image && !value.is_empty() {
-                    let resolved = item_dir.join(value);
-                    if !resolved.exists() {
-                        issues.push(ItemIssue {
-                            source_path: item.source_path.clone(),
-                            code: "missing-image",
-                            message: format!(
-                                "image input '{}' references '{value}' which does not exist at '{}'",
-                                input.name,
-                                resolved.display()
-                            ),
-                        });
-                    }
+            Some(value) if input.kind == InputKind::Image && !value.is_empty() => {
+                let resolved = item_dir.join(value);
+                if !resolved.exists() {
+                    issues.push(ItemIssue {
+                        source_path: item.source_path.clone(),
+                        code: "missing-image",
+                        message: format!(
+                            "image input '{}' references '{value}' which does not exist at '{}'",
+                            input.name,
+                            resolved.display()
+                        ),
+                    });
                 }
             }
+            Some(_) => {}
         }
     }
 }
