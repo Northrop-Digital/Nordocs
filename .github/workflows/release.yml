@@ -1,0 +1,65 @@
+name: Release
+
+# Fires on semantic-version tags only: vMAJOR.MINOR.PATCH, optionally with a
+# pre-release suffix (e.g. v1.2.3, v1.2.3-rc.1, v0.4.0-beta.2).
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+# Required to create the GitHub Release and upload assets.
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Creates the GitHub Release for the pushed tag.
+  #   - Verifies the tag matches the version in Cargo.toml (semver discipline).
+  #   - Auto-marks tags with a -rc / -beta / -alpha suffix as pre-releases.
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Tag (without the leading "v") must equal package.version in Cargo.toml;
+      # the action verifies this and fails the release on a mismatch.
+      - name: Create GitHub release
+        uses: taiki-e/create-gh-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Builds the `ndoc` binary for each target and attaches an archive (with a
+  # SHA-256 checksum) to the release created above.
+  upload-assets:
+    name: Upload ${{ matrix.target }}
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and upload binary
+        uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: ndoc
+          target: ${{ matrix.target }}
+          # tar.gz on Unix, zip on Windows (chosen automatically by the action).
+          archive: $bin-$tag-$target
+          checksum: sha256
+          # Cross-compiled targets (e.g. aarch64 linux) build via `cross` automatically.
+          token: ${{ secrets.GITHUB_TOKEN }}
