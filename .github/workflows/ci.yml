@@ -27,6 +27,12 @@ jobs:
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - name: Check formatting
         run: cargo fmt --all --check
       - name: Clippy (deny warnings)
@@ -44,6 +50,12 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - name: Build
         run: cargo build --all-targets --verbose
       - name: Test
@@ -57,6 +69,12 @@ jobs:
       - name: Install pinned MSRV toolchain
         uses: dtolnay/rust-toolchain@1.89
       - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - name: Build on minimum supported Rust version
         run: cargo build --verbose
 
@@ -68,6 +86,12 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - name: Install cargo-tarpaulin
         uses: taiki-e/install-action@cargo-tarpaulin
       # Thresholds, output formats, timeout and excludes come from tarpaulin.toml.
