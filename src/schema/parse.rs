@@ -396,4 +396,94 @@ mod tests {
         let schemas = load_components_from_dir(dir.path()).expect("read empty dir");
         assert!(schemas.is_empty());
     }
+
+    #[test]
+    fn parse_component_has_body_and_allowed_children() {
+        let src = "/*---\n\
+            componentId: scope-section\n\
+            hasBody: true\n\
+            allowedChildren:\n\
+            \x20 - scope-item\n\
+            inputs:\n\
+            \x20 - name: discipline\n\
+            \x20   type: string\n\
+            ---*/\n";
+        let schema = parse_component_str(src).expect("parse component");
+        assert!(schema.has_body);
+        assert_eq!(schema.allowed_children, vec!["scope-item".to_string()]);
+    }
+
+    #[test]
+    fn parse_component_has_body_omitted_defaults_to_true() {
+        // Deliberate divergence from the reference C# parser, which defaults an
+        // omitted `hasBody` to false. The Rust port defaults it to true, and the
+        // value is observable: validation only emits `leaf-has-children` when
+        // `has_body` is false, so a component that omits `hasBody` may carry
+        // children without a violation.
+        let src = "/*---\ncomponentId: maybe-container\n---*/\n";
+        let schema = parse_component_str(src).expect("parse component");
+        assert!(
+            schema.has_body,
+            "omitted hasBody must default to true (Rust default; C# defaults to false)"
+        );
+    }
+
+    #[test]
+    fn parse_component_container_with_no_allowed_children_is_unconstrained() {
+        let src = "/*---\ncomponentId: generic-container\nhasBody: true\n---*/\n";
+        let schema = parse_component_str(src).expect("parse component");
+        assert!(schema.has_body);
+        assert!(
+            schema.allowed_children.is_empty(),
+            "empty allowed_children means any child is permitted"
+        );
+    }
+
+    #[test]
+    fn parse_component_missing_component_id_is_typed_error() {
+        let src = "/*---\ninputs:\n  - name: a\n    type: string\n---*/\n";
+        let err = parse_component_str(src).expect_err("missing componentId must error");
+        assert!(matches!(err, Error::Schema(_)));
+    }
+
+    #[test]
+    fn parse_component_content_typed_input_becomes_content_entry() {
+        let src = "/*---\ncomponentId: x\ninputs:\n  - name: body\n    type: content\n---*/\n";
+        let schema = parse_component_str(src).expect("parse component");
+        let body = schema.inputs.iter().find(|i| i.name == "body").unwrap();
+        assert_eq!(body.kind, InputKind::Content);
+    }
+
+    #[test]
+    fn parse_component_content_section_folds_entries_with_required_defaulting_true() {
+        let src = "/*---\n\
+            componentId: scope-item\n\
+            content:\n\
+            \x20 - name: body\n\
+            \x20 - name: notes\n\
+            \x20   required: false\n\
+            ---*/\n";
+        let schema = parse_component_str(src).expect("parse component");
+        let body = schema
+            .inputs
+            .iter()
+            .find(|i| i.name == "body")
+            .expect("body content input present");
+        assert_eq!(body.kind, InputKind::Content);
+        assert!(body.required, "content entry required defaults to true");
+        let notes = schema
+            .inputs
+            .iter()
+            .find(|i| i.name == "notes")
+            .expect("notes content input present");
+        assert_eq!(notes.kind, InputKind::Content);
+        assert!(!notes.required, "content entry required: false is honoured");
+    }
+
+    #[test]
+    fn parse_component_list_input_kind_is_typed_error() {
+        let src = "/*---\ncomponentId: x\ninputs:\n  - name: phases\n    type: list\n---*/\n";
+        let err = parse_component_str(src).expect_err("list is not a supported input kind");
+        assert!(matches!(err, Error::Schema(_)));
+    }
 }

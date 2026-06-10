@@ -415,6 +415,65 @@ mod tests {
     }
 
     #[test]
+    fn validate_reports_missing_required_content() {
+        let item = parse_item_str(VALID_ITEM, Path::new("a.item.md")).unwrap();
+        let comp = schema(
+            "project",
+            vec![
+                required("title", InputKind::String),
+                required("summary", InputKind::Content),
+            ],
+        );
+        let issues = validate_items(&[item], &[comp]);
+        assert_eq!(
+            issues.len(),
+            1,
+            "required content input 'summary' is missing"
+        );
+        assert_eq!(issues[0].code, "missing-input");
+        assert!(issues[0].message.contains("summary"));
+    }
+
+    #[test]
+    fn validate_ignores_inputs_beyond_schema() {
+        // VALID_ITEM declares title + budget; the schema only requires title, so
+        // the extra `budget` input must not produce any issue.
+        let item = parse_item_str(VALID_ITEM, Path::new("a.item.md")).unwrap();
+        let comp = schema("project", vec![required("title", InputKind::String)]);
+        assert!(
+            validate_items(&[item], &[comp]).is_empty(),
+            "inputs beyond the schema are ignored, not flagged"
+        );
+    }
+
+    #[test]
+    fn validate_issue_carries_source_path() {
+        let item = parse_item_str(VALID_ITEM, Path::new("nested/a.item.md")).unwrap();
+        let issues = validate_items(&[item], &[]);
+        assert_eq!(issues.len(), 1);
+        assert_eq!(
+            issues[0].source_path,
+            PathBuf::from("nested/a.item.md"),
+            "every issue names the source file that produced it"
+        );
+    }
+
+    #[test]
+    fn parse_item_without_id_is_accepted() {
+        let src = "---\n$schema: project\n$collection: projects\ntitle: X\n---\nbody\n";
+        let item = parse_item_str(src, Path::new("a.item.md")).expect("item without id parses");
+        assert_eq!(item.schema, "project");
+        assert_eq!(item.inputs.get("title").map(String::as_str), Some("X"));
+    }
+
+    #[test]
+    fn parse_item_without_tags_defaults_to_empty_list() {
+        let src = "---\n$schema: project\n$collection: projects\n---\nbody\n";
+        let item = parse_item_str(src, Path::new("a.item.md")).expect("item without tags parses");
+        assert!(item.tags.is_empty());
+    }
+
+    #[test]
     fn validate_resolves_present_image() {
         let dir = tempfile::tempdir().expect("tempdir");
         write_file(dir.path(), "logo.png", "fake png bytes");

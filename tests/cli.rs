@@ -738,6 +738,56 @@ fn e2e_render_output_override() {
     );
 }
 
+/// `ndoc render <component>` with no `-o` writes the PDF next to the source,
+/// swapping the `.ncmp.typ` suffix for `.pdf`.
+#[test]
+fn e2e_render_component_default_output_next_to_source() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let fixture = manifest.join("tests/fixtures/render.ncmp.typ");
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let input = tmp.path().join("widget.ncmp.typ");
+    std::fs::copy(&fixture, &input).expect("copy fixture into temp dir");
+    let expected_pdf = tmp.path().join("widget.pdf");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["render", &abs(&input)])
+        .assert()
+        .success();
+
+    assert!(
+        expected_pdf.exists(),
+        "render writes the PDF next to the source at {expected_pdf:?}"
+    );
+    assert!(expected_pdf.metadata().expect("PDF metadata").len() > 0);
+}
+
+/// Rendering to the default output path overwrites any pre-existing file there.
+#[test]
+fn e2e_render_default_output_overwrites_existing_file() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let fixture = manifest.join("tests/fixtures/render.ncmp.typ");
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let input = tmp.path().join("widget.ncmp.typ");
+    std::fs::copy(&fixture, &input).expect("copy fixture into temp dir");
+    let out = tmp.path().join("widget.pdf");
+    // Pre-seed the default output path with stale, non-PDF content.
+    std::fs::write(&out, b"STALE").expect("seed stale file");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["render", &abs(&input)])
+        .assert()
+        .success();
+
+    let bytes = std::fs::read(&out).expect("read output");
+    assert_eq!(
+        &bytes[..5],
+        b"%PDF-",
+        "the stale file was overwritten with a PDF"
+    );
+}
+
 /// `ndoc render <missing.ncmp.typ>` exits non-zero and names the offending path.
 #[test]
 fn e2e_render_missing_input() {
@@ -880,6 +930,20 @@ fn e2e_component_list_empty_dir() {
         .assert()
         .success()
         .stdout(predicate::str::contains("no components found"));
+}
+
+/// `ndoc component list <empty-dir> --json` emits an empty components array.
+#[test]
+fn e2e_component_list_empty_dir_json() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args(["component", "list", "--json", &abs(tmp.path())])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(r#""status":"ok""#))
+        .stdout(predicate::str::contains(r#""components":[]"#));
 }
 
 /// `ndoc component list <missing-dir>` exits non-zero with the offending path.
@@ -2064,6 +2128,98 @@ fn e2e_doc_add_unknown_parent() {
 
     let after = std::fs::read_to_string(&doc).expect("read after");
     assert_eq!(before, after, "document is unchanged on error");
+}
+
+/// An unknown `--before` sibling id exits non-zero and leaves the document
+/// unchanged (parity with the reference SiblingNotFound outcome).
+#[test]
+fn e2e_doc_add_unknown_sibling() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+    let before = std::fs::read_to_string(&doc).expect("read before");
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "heading",
+            "--before",
+            "missing-1234",
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown node id"));
+
+    let after = std::fs::read_to_string(&doc).expect("read after");
+    assert_eq!(
+        before, after,
+        "document is unchanged on a missing sibling target"
+    );
+}
+
+/// `--before` and `--after` are mutually exclusive placements: supplying both is
+/// rejected with a usage error and a non-zero exit (parity with the reference
+/// ConflictingPosition outcome).
+#[test]
+fn e2e_doc_add_conflicting_placement() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_document_with_nodes(&doc);
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "heading",
+            "--before",
+            "section-aabb",
+            "--after",
+            "section-aabb",
+        ])
+        .assert()
+        .failure();
+}
+
+/// Adding a node with an empty image-typed input stores the empty value without
+/// embedding anything: the image manifest is untouched (parity with the
+/// reference AddNode_WithEmptyImageInput_DoesNotTouchImageState outcome).
+#[test]
+fn e2e_doc_add_empty_image_input_leaves_manifest_untouched() {
+    let tmp = tempfile::tempdir().expect("temp dir");
+    let doc = tmp.path().join("doc.ndoc.typ");
+    write_empty_document(&doc);
+    let images_before = nordocs::authoring::doc_state::read_document(&doc)
+        .expect("read before")
+        .images
+        .len();
+
+    Command::cargo_bin("ndoc")
+        .expect("ndoc binary builds")
+        .args([
+            "doc",
+            "add",
+            &abs(&doc),
+            "--type",
+            "paragraph",
+            "--inputs",
+            "image=",
+        ])
+        .assert()
+        .success();
+
+    let after = nordocs::authoring::doc_state::read_document(&doc).expect("read after");
+    assert_eq!(
+        after.images.len(),
+        images_before,
+        "an empty image input must not add any manifest entry"
+    );
 }
 
 /// `ndoc doc remove <id>` (default) drops the node but promotes its children.

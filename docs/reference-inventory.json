@@ -1,0 +1,5717 @@
+{
+  "core": {
+    "test/ComponentResolverTests.cs": [
+      {
+        "method": "LoadForTemplate_LoadsComponentsFromSiblingComponentsDirectory",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadForDocument_LoadsComponentsFromSiblingComponentsDirectory",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadForTemplate_MissingComponentsDirectory_ReturnsEmptyDictionary",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadForDocument_MissingComponentsDirectory_ReturnsEmptyDictionary",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadForTemplate_PreservesComponentIdAsDictionaryKey",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/ComponentSchemaParserTests.cs": [
+      {
+        "method": "ParseComponent_WithStringAndContentInputs_ParsesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithNoFrontmatter_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithMalformedYaml_ThrowsException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_AllInputTypes_ParseCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ImageInputWithWidthAndHeight_ParsesPixelFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ImageInputWithoutWidthAndHeight_WidthAndHeightAreNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_InputWithAllFields_ParsesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_InputWithOnlyRequiredFields_DerivesLabel",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithHasBodyTrue_ParsesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithHasBodyOmitted_DefaultsToFalse",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ContainerWithNoAllowedChildren_AllowsAny",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithImages_ParsesImageMetadata",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithNoImages_ReturnsNullImagesList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_WithImages_ParsesImageMetadata",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_WithNoImages_ReturnsNullImagesList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadComponentsFromDirectory_MultipleComponents_LoadsAll",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadComponentsFromDirectory_DuplicateIds_ThrowsException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadComponentsFromDirectory_FileMissingDescription_ThrowsWithFilename",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_WithValidFrontmatter_ParsesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_WithNoFrontmatter_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_WithAllFields_ParsesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_WithNoFrontmatter_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_MissingTopLevelDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_InputMissingDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_MissingTopLevelDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_DocumentInputMissingDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_MissingTopLevelDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseTheme_VariableMissingDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InputDefinition_DerivedLabel_FormatsHyphenatedNameCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InputDefinition_DerivedLabel_SingleWord",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InputDefinition_ExplicitLabel_TakesPrecedence",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "VariableDefinition_DerivedLabel_FormatsHyphenatedName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "VariableDefinition_ExplicitLabel_TakesPrecedence",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_WithDefaultLayout_ParsesTreeShape",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_WithoutDefaultLayout_IsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_DefaultLayoutMissingType_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseDocumentTemplate_DefaultLayoutScalarWhereMappingExpected_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ListInputWithValidFields_ParsesFieldsInOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ListInputWithoutFields_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ListInputWithNestedList_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_NonListInputWithFields_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ListInputWithDuplicateFieldNames_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InputDefinition_ParsedType_ListMapsToEnum",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/ComposeIntegrationTests.cs": [
+      {
+        "method": "Compose_FromExampleFixtures_ProducesExpectedSections",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_FromExampleFixtures_RendersToPdf",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/ComposeVsCreateDocumentEquivalenceTests.cs": [
+      {
+        "method": "ComposeAndCreateDocument_ProduceEquivalentStates_ModuloIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/DocumentAuthoringEndToEndTests.cs": [
+      {
+        "method": "AddImageTypedInput_ComposedDocumentCompilesToPdf",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CreateAddSetRender_ProducesPdfNextToSource",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/DocumentAuthoringServiceTests.cs": [
+      {
+        "method": "CreateDocument_ValidTemplate_WritesFileAndReturnsOutline",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CreateDocument_HonoursExplicitOutputPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CreateDocument_MissingTemplate_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GetOutline_AfterCreate_ReturnsEmptyTree",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GetOutline_IncludesDisplayNameAndIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_AppendsToRoot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_InsertsBeforeSibling",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_InsertsAfterSibling",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_UnderParent_UpdatesChildrenList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_ComponentNotAllowed_ReturnsComponentNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_ChildNotAllowed_ReturnsChildNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_ParentIsLeaf_ReturnsParentIsLeaf",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_RequiredInputMissing_ReturnsRequiredInputsMissing",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_UnknownInputKey_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_InputTypeMismatch_ReturnsInputTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_UnknownParentId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_SiblingNotFound_ReturnsSiblingNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_BothBeforeAndAfter_ReturnsConflictingPosition",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RemoveNode_RemovesAndRewritesFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RemoveNode_SurvivingSiblingsRetainIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RemoveNode_UnknownId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetNodeInput_UpdatesValue_ReflectedInOutline",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetNodeInput_UnknownKey_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetNodeInput_UnknownId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetGlobalInput_UpdatesGlobalInputsList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetGlobalInput_UnknownKey_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetGlobalInput_TypeMismatch_ReturnsInputTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderPdf_DelegatesToPipelineAndWritesDefaultPdfPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderPdf_ExplicitOutputPath_WritesThere",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderPdf_MissingDoc_ReturnsReadFailed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_WithImageInput_EmbedsPngAndRewritesInputValue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_WithEmptyImageInput_DoesNotTouchImageState",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_WithMissingImageFile_ReturnsImageNotFoundAndLeavesFileUnchanged",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_TwoDifferentPngsWithSameName_DisambiguatesByHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_SameImageIngestedTwice_ReusesFirstName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_AssignsUniqueIdsToSiblingNodesOfSameType",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_IdSurvivesReorderOfSiblings",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddItem_ListBearingItem_ProducesParentWithChildren",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddItem_UnknownSchema_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/DocumentGeneratorTests.cs": [
+      {
+        "method": "GenerateTypstCode_LeafComponentWithInputs_EmitsCorrectCall",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateTypstCode_MultipleFlatNodes_InsertsPagebreaks",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateTypstCode_ContainerWithChildren_EmitsContentBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateTypstCode_DeeplyNestedTree_IncreasesIndentation",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateDocumentState_WithInputs_EmitsStateDeclaration",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ValidateTree_ComponentNotAllowed_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ValidateTree_ChildrenOnLeafComponent_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ValidateTree_DisallowedChildType_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ValidateTree_ValidTree_ReturnsNoErrors",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ValidateTree_MissingRequiredInput_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateTypstCode_ContentTypeInput_UsesSquareBrackets",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateTypstCode_EmptyContentTypeInput_UsesEmptySquareBrackets",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_String_QuotesCorrectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_Boolean_EmitsLowercase",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_Null_EmitsNone",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_Number_EmitsInvariant",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_ContentString_UsesSquareBrackets",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_EmptyContentString_UsesEmptySquareBrackets",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_NullContent_UsesEmptySquareBrackets",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_DateTime_EmitsIso8601String",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FormatTypstValue_MarkdownContentString_IsConvertedToTypst",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GenerateDocumentState_PreservesDeclaredListOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/DocumentNodeTreeValidatorTests.cs": [
+      {
+        "method": "Validate_RootNotInAllowedComponents_ReturnsComponentNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ChildNotInParentsAllowedChildren_ReturnsChildNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_LeafComponentWithChildren_ReturnsLeafHasChildren",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_UnknownInputKey_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_InputTypeMismatch_ReturnsInputTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_RequiredInputOmitted_Accepted",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_WellFormedLayout_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/FatFileServiceTests.cs": [
+      {
+        "method": "DocumentState_RoundTripsImages_ThroughJsonSerialisation",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DocumentState_MissingImages_DeserialisesAsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_ProducesAllSections",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_StateSection_ContainsJson",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_InjectsImageOrPlaceholderHelper",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_TemplateSection_ContainsThemeCode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_TemplateSection_ContainsComponentCodeWithoutFrontmatter",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_DocumentSection_ContainsStateAndTree",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_FromComposedFile_ReturnsOriginalState",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_NoStateSection_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_RoundTrip_PreservesGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "StripFrontmatter_RemovesFrontmatterBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "StripFrontmatter_NoFrontmatter_ReturnsContent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_ProducesCompilableFatFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_WithImages_ProducesImagesSectionBetweenStateAndTemplate",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_WithoutImages_OmitsImagesSection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "StripFrontmatter_AlsoStripsImagesSection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ChangedImageMetadata_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ImageOrderDoesNotAffectHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CheckVersion_SameVersion_NoUpdateAvailable",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CheckVersion_NewerVersion_UpdateAvailable",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Update_PreservesUserInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectIncompatibilities_RemovedInputWithUserValue_ReportsIncompatibility",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectIncompatibilities_RemovedInputWithDefaultValue_NoIncompatibility",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Update_WithNewTemplateInputs_PreservesExistingInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComposeCompletenessTest_MissingDocField_FailsCompilation",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_SameInputs_ProducesSameHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ChangedTemplate_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ChangedTheme_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ChangedComponent_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ChangedState_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ComponentOrderDoesNotAffectHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_ExistingContentHash_DoesNotAffectResult",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_RestoresOriginalContentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_WithContentHashSet_IncludesHashInOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_WithNullContentHash_OmitsHashFromOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_WithContentHash_RoundTrips",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_LegacyFileWithoutHash_ReturnsNullContentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_ExtractState_RoundTripsNodeIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_ExtractState_RoundTripsContentInputsAsMarkdown",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Compose_ExtractState_WriteReadWrite_ProducesByteIdenticalOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_OrphanComponentInputId_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_MissingComponentInputBlock_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_YamlKeyReorder_ProducesSameHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_WhitespaceOnlyContentEdits_ProduceSameHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_BlankLineRunCollapse_ProducesSameHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_WordEditToContent_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComputeInputHash_NodeReorder_ProducesDifferentHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractState_EmptyInputsKeyOmittedForBareComponent_RoundTrips",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/FileSystemSeamTests.cs": [
+      {
+        "method": "ComponentSchemaParser_LoadComponentsFromDirectory_ReadsOnlyViaSeam",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComponentResolver_LoadForTemplate_UsesSeamForDirectoryProbeAndReads",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComponentResolver_LoadForTemplate_MissingComponentsDir_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "TemplateResolver_LoadTemplate_ReadsEntirelyViaSeam",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "TemplateResolver_LoadTemplate_MissingFile_ThrowsWithoutTouchingDisk",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "TemplateResolver_ResolveThemeCode_FindsByIdInParentOfComponentsDir_ViaSeam",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "TemplateResolver_LoadComponentSources_EnumeratesViaSeam",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "TemplateResolver_LoadComponentSources_MissingDirectory_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/ImageMergerTests.cs": [
+      {
+        "method": "MergeImages_DistinctNames_SucceedsMerge",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "MergeImages_SameNameSameHash_Deduplicates",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "MergeImages_SameNameDifferentHash_ThrowsWithDescriptiveMessage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CombineWithDocIngested_MergesManifestsAndBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CombineWithDocIngested_DocEntryWithSameHashAsTheme_DedupesBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CombineWithDocIngested_EmptyDocIngested_ReturnsEquivalentResult",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "MergeImages_ComponentReferencingThemeImageViaStateVariable_NoCollision",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/ImageSectionParserTests.cs": [
+      {
+        "method": "ExtractImages_WithMultipleEntries_ReturnsAll",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_NoSection_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_DuplicateHash_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "WriteImagesSection_ProducesFormattedOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RoundTrip_WriteAndExtract_ProducesIdenticalBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RoundTrip_LargeImage_WritesMultipleBase64Lines",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "WriteImagesSection_DeduplicatedByHash",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "StripImagesSection_RemovesBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "StripImagesSection_NoSection_ReturnsContent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/MarkdownToTypstConverterTests.cs": [
+      {
+        "method": "Convert_EmptyString_ReturnsEmptyString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_NullString_ReturnsEmptyString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_WhitespaceOnly_ReturnsEmptyString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Heading1_ProducesTypstHeading",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Heading2_ProducesTypstHeading",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Heading3_ProducesTypstHeading",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Heading4_ProducesTypstHeading",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_HeadingWithInlineFormatting_PreservesFormatting",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_BoldText_ProducesTypstBold",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_ItalicText_ProducesTypstItalic",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_ItalicWithUnderscore_ProducesTypstItalic",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_BoldAndItalicMixed_ProducesCorrectTypst",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_NestedBoldInItalic_ProducesCorrectTypst",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Link_ProducesTypstLink",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_LinkWithFormattedText_ProducesTypstLink",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_Image_ProducesTypstImage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_ImageWithPath_ProducesTypstImage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_InlineCode_ProducesTypstRaw",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_FencedCodeBlockWithLanguage_ProducesTypstCodeBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_FencedCodeBlockWithoutLanguage_ProducesTypstCodeBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_UnorderedList_ProducesTypstList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_OrderedList_ProducesTypstEnumeration",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_NestedList_ProducesIndentedTypstList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_ListWithInlineFormatting_PreservesFormatting",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_BlockQuote_ProducesTypstQuote",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_MultilineBlockQuote_ProducesTypstQuote",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_SimpleTable_ProducesTypstTable",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_TableWithAlignment_IncludesAlignments",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_HorizontalRule_ProducesTypstLine",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_TypstSpecialCharacters_AreEscaped",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_HashInText_IsEscaped",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_MixedDocument_ProducesCorrectTypst",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_ParagraphWithMultipleInlineElements_PreservesAll",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Convert_PlainText_PassesThroughWithEscaping",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/NodeIdGeneratorTests.cs": [
+      {
+        "method": "Mint_ProducesIdsOfTheExpectedForm",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Mint_DoesNotCollideWithExistingIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Mint_ManyInvocations_ProducesUniqueIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CollectIds_WalksTreeRecursively",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/PdfRenderPipelineTests.cs": [
+      {
+        "method": "DefaultRegistration_WhenResolvedAndInvoked_ThrowsWithRegistrationGuidance",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ConsumerRegisteredImplementation_ReplacesDefault",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/PreviewRendererTests.cs": [
+      {
+        "method": "RenderComponentPreview_ComposesAndCompiles",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderComponentPreview_WithInputValues_MergesWithDefaults",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderComponentPreview_WithThemeCode_UsesProvidedTheme",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderComponentPreview_NullSource_ThrowsArgumentNullException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderComponentPreview_NullSchema_ThrowsArgumentNullException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentPreview_ComposesAndCompiles",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentPreview_NullState_ThrowsArgumentNullException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentPreview_NullTheme_ThrowsArgumentNullException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderComponentPreview_CompilerThrows_PropagatesException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentPreview_CompilerThrows_PropagatesException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/StateBlockChunkerTests.cs": [
+      {
+        "method": "Chunk_ExtractsJsonPreludeAsFirstBalancedObject",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_ExtractsDocumentInputBody",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_ExtractsComponentInputsInAppearanceOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_ComponentInputJoinedId_IsComponentIdHyphenInstance",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_AcceptsAttributesInEitherOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_RejectsNestedComponentInputBlocks",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_RejectsMissingDocumentInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Chunk_RejectsUnbalancedJson",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/StateBlockWriterTests.cs": [
+      {
+        "method": "Write_JsonPrelude_ContainsTemplateAndThemeIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_JsonPrelude_ExcludesInputsFromNodes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_JsonPrelude_PreservesTreeHierarchy",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_JsonPrelude_OmitsContentHashWhenNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_JsonPrelude_IncludesContentHashWhenSet",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_EmitsDocumentInputWithFlatKeyedGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_DocumentInputFrontmatter_HasOnlyTemplateIdWhenGlobalInputsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_EmitsComponentInputsWithSplitTagAttributes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_EmitsComponentInputsInDfsOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_ComponentInputFrontmatter_IsFlatKeyedMapWithoutComponentId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_RoutesContentInputsToHtmlCommentDelimitedBlocks",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_EmptyFrontmatter_WhenNodeHasOnlyContentInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_EmptyFrontmatter_WhenNodeHasNoInputsAtAll",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_DateTimeValues_EmittedAsIso8601",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_MultiLineStringValues_UseYamlBlockScalar",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_BooleanAndStringValues_UseYamlScalars",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_ThenChunk_YieldsAllExpectedPieces",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_RoundTripsByteIdenticallyOnSecondWrite",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Write_PreludeNodeId_MatchesJoinedComponentIdAndInstance",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/StateCanonicaliserTests.cs": [
+      {
+        "method": "Canonicalise_ScalarInputOrdering_DoesNotAffectOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_GlobalInputOrdering_DoesNotAffectOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_WhitespaceEditsToContentMarkdown_DoNotAffectOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_RunsOfThreePlusBlankLines_CollapseToTwo",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_ImagesSortedByName_RegardlessOfInputOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_OneWordEditToContent_ChangesOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_NodeReorder_ChangesOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Canonicalise_DropsContentHashFromPrelude",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/TaggedBlockParserTests.cs": [
+      {
+        "method": "Parse_FlatKeyedYamlFrontmatter_DeserialisesAsRoot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_HtmlCommentDelimitedContentBlocks_AreExtracted",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_MultipleDistinctContentBlocks_PreserveOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_EmptyMarkdownSection_ReturnsNoContentBlocks",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_NormalisesCrlfLineEndings",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_RejectsMissingOpeningFence",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_RejectsMissingClosingFence",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_RejectsUnmatchedStartMarker",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_RejectsDuplicateContentBlockName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/TemplateResolverTests.cs": [
+      {
+        "method": "BuildDefaultState_GlobalInputsUseTemplateDefaultsWhenProvided",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_FallsBackToTypeDefaultsWhenNoExplicitDefault",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_CarriesTemplateIdentityOntoState",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_NullDocumentInputs_ReturnsEmptyGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveThemeCode_ExplicitPath_ReadsFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveThemeCode_ExplicitPathMissing_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveThemeCode_FindsByIdInParentOfComponentsDir",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveThemeCode_MatchIsCaseInsensitive",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveThemeCode_NotFound_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadComponentSources_DirectoryAbsent_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadComponentSources_ReturnsEveryNcmpFileKeyedByFileName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParserLoadComponentsFromDirectory_DuplicateComponentIds_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadTemplate_MissingFile_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadTemplate_WrongExtension_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LoadTemplate_ValidFile_ReturnsParsedSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_NoDefaultLayout_NodesIsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_DefaultScaffold_MaterialisesLayout",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_EmptyScaffold_KeepsNodesEmpty_KeepsGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_TwoCalls_ProduceNonCollidingIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_SchemaDefaultFlowsThrough_WhenNotSeeded",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_TemplateSeededValueWinsOverComponentDefault",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_LayoutOnlyInputKey_AppendedAfterSchemaDefaults",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildDefaultState_RequiredInputCanBeOmitted_FromMaterialisedNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/Catalogue/DocumentTemplateCatalogueGetDetailsTests.cs": [
+      {
+        "method": "GetDetails_ReadsTemplateContentThroughInjectedFileSystem",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GetDetails_UnknownTemplateId_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ComponentSchemaMigrationTests.cs": [
+      {
+        "method": "ParseComponent_InputRequiredFalse_IsHonoured",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_InputWithoutRequired_DefaultsToTrue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithContentSection_ParsesEntries",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ContentEntryRequiredFalse_IsHonoured",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_ContentEntryMissingDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_DuplicateContentNames_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithRequiredSchema_ExposesField",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseComponent_WithoutRequiredSchema_HasNullRequiredSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComponentSchema_SchemaProperty_MatchesFromFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComponentSchema_SchemaProperty_DoesNotIncludeRenderingOnlyFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/DocumentAuthoringServiceContextTests.cs": [
+      {
+        "method": "AddNode_WithExplicitContextPointingAtOutOfFolderTemplate_Succeeds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddNode_ContextResolvesToBogusTemplatePath_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ItemCollectionLoaderTests.cs": [
+      {
+        "method": "Load_MergesItemsFromBothRootsIntoSingleCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_ProjectItemReplacesGlobalItemWithSameId_AndLogsInfo",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_MissingProjectRoot_LoadsFromGlobalOnly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_InvalidItemSkippedWithWarning",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_GroupsItemsByDistinctCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_BothRootsMissing_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ItemCollectionTests.cs": [
+      {
+        "method": "LookupById_ReturnsItem",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LookupById_MissingId_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LookupByTag_ReturnsAllItemsWithTag",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LookupByTag_UnknownTag_ReturnsEmpty",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LookupBySchema_ReturnsAllItemsWithThatSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "LookupByInputKey_ReturnsItemsThatDeclareThatKey",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Schemas_ReturnsDistinctSchemaNames",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Tags_ReturnsUniqueTagsAcrossItems",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Items_PreservesInputOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ItemNodeBuilderTests.cs": [
+      {
+        "method": "Build_ScalarOnlyItem_ReturnsLeafNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_ItemWithListInput_ReturnsParentWithNChildren",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_RecordFieldsRoutedToChildInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_RecordFieldsRoutedToChildContent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_ChildNodeIdsAreUnique",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_ParentSchemaNotFound_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_NoAllowedChildren_WithListInput_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_ZeroMatchingChild_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_AmbiguousChildMatch_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ItemParserTests.cs": [
+      {
+        "method": "Parse_FullItem_PopulatesAllFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_WithoutId_AcceptsItem",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_DollarPrefixedUserKey_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_DuplicateContentBlockName_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_UnmatchedStartMarker_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_PreservesDeclaredInputKeyOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_WithoutTags_DefaultsToEmptyList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_MissingSchema_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_MissingCollection_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParseContent_SameFormatWorksForComponentInputBlockBody",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ResolveImagePath_ResolvesAlongsideSourceFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_IndexedBlockName_IsAccepted",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_DuplicateIndexedBlockName_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_BelowSentinel_MaterialisesIndexedBlocks",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_BelowSentinel_GapInIndices_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_YamlSequenceForm_MaterialisesDirectly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_ExampleScopeItem_ParsesAndMaterialisesPhases",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_ExampleScopeItem_ValidatesAgainstSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Parse_MixedScalarAndListInputs_BothPresent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/ItemValidatorTests.cs": [
+      {
+        "method": "Validate_MissingRequiredInput_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_MissingRequiredContent_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_TypeMismatchOnNumber_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_UndeclaredContentBlock_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_UnknownSchema_ReportsSingleIssueAndStops",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ExtraInputsBeyondSchema_NoIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_OptionalInputAndContentMissing_NoIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_EveryIssueIncludesSourcePath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_MissingImageFile_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_PresentImageFile_NoMissingImageIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ValidListInput_NoIssues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ListInput_MissingRequiredFieldAtIndex_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ListInput_UndeclaredField_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ListInput_WrongOuterShape_ReportsTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Validate_ListInput_ImageFieldMissingFile_ReportsIssue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/LocalFolderResolutionContextTests.cs": [
+      {
+        "method": "FromDocPath_ResolvesSiblingTemplateComponentsAndTheme",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromDocPath_HonoursStateIdsAtResolveTime",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExplicitTemplatePathOverride_ReplacesTemplateOnly_AndDerivesSiblingsFromOverrideFolder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExplicitComponentsDirectoryOverride_ReplacesOnlyComponents",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExplicitThemePathOverride_ReplacesOnlyTheme",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AllThreeOverrides_ReplaceEveryInferredPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Resolution_ReturnsAbsolutePaths_ForRelativeInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Resolution_ReturnsAbsoluteInferredPaths_WhenDocPathIsRelative",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/SchemaCatalogueTests.cs": [
+      {
+        "method": "Load_FromBothRoots_ExposesAllSchemas",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_ProjectShadowsGlobalByName_AndLogsWarning",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_MissingGlobalRoot_LoadsFromProjectOnly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_MissingProjectRoot_LoadsFromGlobalOnly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Load_BothRootsMissing_LoadsNothing",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Lookup_UnknownName_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/SchemaMatcherTests.cs": [
+      {
+        "method": "Match_NoRequiredSchema_ItemSupersetMatches",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_RequiredSchema_ExcludesItemsWithDifferentSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_ItemMissingRequiredInput_Excluded",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_ItemMissingRequiredContent_Excluded",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_OptionalInputAndContentMissing_Allowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_ItemWithExtraInputsAndContent_Included",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Match_SchemaNameFilterRunsBeforeStructuralFilter",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/SchemaParserTests.cs": [
+      {
+        "method": "FromFile_CompleteSchema_ParsesAllFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_RequiredFalse_IsHonoured",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_MissingName_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_MissingDescription_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_DuplicateInputNames_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_DuplicateContentNames_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_InvalidNameCharacters_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_PreservesInputsAndContentOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromComponent_ProducesCanonicalSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromComponent_LegacyContentTypedInputs_BecomeContentEntries",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromComponentAndFromFile_ProduceSameShapeForEquivalentInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_ListInputWithValidFields_ParsesFieldsInOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_ListInputWithoutFields_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_ListInputWithNestedList_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_NonListInputWithFields_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "FromFile_ListInputWithDuplicateFieldNames_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ParsedType_ListType_ReturnsList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ComponentInputType_ContainsListMember",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/Templating/SchemaTests.cs": [
+      {
+        "method": "Schema_DefaultInputsAndContent_AreEmptyLists",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Schema_PreservesInputAndContentOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaInput_RequiredDefaultsToTrue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaInput_RequiredCanBeOverriddenToFalse",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaContent_RequiredDefaultsToTrue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaContent_RequiredCanBeOverriddenToFalse",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaInput_ParsedType_ResolvesEachSupportedType",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaInput_ParsedType_ThrowsForUnknownType",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "test/TypstCompilerTests.cs": [
+      {
+        "method": "CompileToPdf_SimpleContent_ReturnsPdfBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_WithVariables_ReturnsPdfBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_NullSource_ThrowsArgumentException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_EmptySource_ThrowsArgumentException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_WhitespaceSource_ThrowsArgumentException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_InvalidSyntax_ThrowsInvalidOperationException",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CompileToPdf_ImageOrPlaceholderWithEmptyName_RendersPlaceholder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ]
+  },
+  "cli": {
+    "CLI/test/Commands/BuildCommandTests.cs": [
+      {
+        "method": "Execute_SuccessfulBuild_ReturnsZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_UpToDate_ReturnsZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_Error_ReturnsOne",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Commands/DocAddItemTests.cs": [
+      {
+        "method": "ExecuteAdd_WithItem_HappyPath_PassesItemInputsToAuthoringService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_ExplicitInputs_OverrideItemValues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_UnknownItemId_ExitsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_IncompatibleItem_ExitsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_WithItem_UsesItemFolderAsImageBaseDirectory",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Commands/ImageCommandTests.cs": [
+      {
+        "method": "AddImage_ToDocument_UpdatesStateAndImagesSection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_ToComponent_UpdatesFrontmatterAndImagesSection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_ToTheme_UpdatesFrontmatterAndImagesSection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_DuplicateName_Rejected",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_SameContentDifferentName_DeduplicatesBase64",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_ImageNotFound_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddImage_UnsupportedFileType_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Commands/ItemCommandTests.cs": [
+      {
+        "method": "ExecuteLoad_ValidItems_ExitsZero_AndPrintsCollectionSummary",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteLoad_InvalidItems_ExitsZero_AndNamesSkippedItems",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteLoad_Json_EmitsCollectionsAndSkipped",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteLoad_MissingDirectory_ExitsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteValidate_AllValid_ExitsZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteValidate_AnyFailure_ExitsNonZero_AndPrintsIssues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteValidate_Json_EmitsIssuesArray",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSearch_MatchesTags",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSearch_FiltersByTag",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSearch_FiltersByCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSearch_MatchesAcrossStringInputValues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSearch_Json_ReturnsItemsArray",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/ComponentCommandTests.cs": [
+      {
+        "method": "Create_ReturnsComponentCommandWithSubcommands",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_ValidComponent_EmitsCamelCaseJsonWithAllFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_EmitsInputsWithFullFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_NonexistentFile_ReturnsOneAndPrintsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_ParserThrows_ReturnsOneAndWritesErrorToStderr",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubFlag_EmitsNodeStubWithCorrectShape",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_Stub_UsesDeclaredDefaultsWhenPresent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_ImageInput_EmitsTypeWidthHeightAndEmptyDefault",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubForImageInput_UsesEmptyString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_Stub_UsesEmptyValuesForTypesWithoutDefaults",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_Default_EmitsYamlFrontmatterShape",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubDefault_EmitsComponentInputTaggedBlockWithContentContainers",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubDefault_OmitsInputsKeyWhenNoScalarInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_DefaultTable_ListsComponentsAlphabetically",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_DescriptionTruncatedToEightyCharactersWithEllipsis",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_JsonFlag_EmitsMediumShapeArray",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_JsonFullFlag_EmitsArrayOfFullSchemas",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_FullWithoutJson_ReturnsOneAndErrors",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_EmptyDirectory_ProducesEmptyTable",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_EmptyDirectory_JsonProducesEmptyArray",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteList_MissingDirectory_ReturnsOne",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/ComposeCommandTests.cs": [
+      {
+        "method": "Execute_MissingTemplate_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_WrongExtension_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ValidTemplate_ComposesDocument",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_WithInputsFile_ExtractsState",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_InputsFileWithContentAfterState_WithoutForce_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_InputsFileWithContentAfterState_WithForce_Succeeds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComposerThrows_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/DocCommandBatchAddTests.cs": [
+      {
+        "method": "Create_IncludesBatchAddSubcommand",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_InlineJsonLiteral_Parsed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_StdinInput_Parsed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_FilePathInput_Parsed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_MissingFilePath_ReturnsOne",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_MalformedJson_ReturnsOneWithCleanError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_InvalidShape_MissingType_Rejects",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_InvalidShape_MissingInputs_Rejects",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_InvalidShape_MissingChildren_Rejects",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_SingleRootNoChildren_BehavesLikeDocAdd",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_TwoLevelSubtree_InsertsParentThenChildrenInOrder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_ValidationFailureMidSubtree_RollsBackEarlierInserts",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_ParentId_ForwardedToAddNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_BeforeId_ForwardedToAddNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_AfterId_ForwardedToAddNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteBatchAdd_UnknownParentId_PropagatesNodeNotFoundErrorAndRollsBack",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/DocCommandNewSubcommandsTests.cs": [
+      {
+        "method": "Create_RegistersNewSubcommands",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "List_JsonOutput_EmitsEnvelopeWithDocuments",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Details_NoNodeId_DelegatesToGetDocumentDetails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Details_WithNodeId_DelegatesToGetComponentDetails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetMany_GlobalsRoute_DelegatesToSetGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SetMany_NodeRoute_DelegatesToSetNodeInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Patch_ParsesPatchesJsonAndDelegates",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Patch_OverlapErrorEnvelope_ExitsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Search_JsonEnvelope",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Remove_WithoutWithChildren_PassesDeleteChildrenFalse",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Remove_NodeHasChildrenError_PrintsCode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/DocCommandOverrideFlagsTests.cs": [
+      {
+        "method": "ExecuteAdd_WithoutOverrides_UsesDocFolderResolution",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_WithTemplateOverride_ResolvesTemplateAndSiblingsFromOverridePath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_WithoutTemplateOverride_FailsWhenDocFolderHasNoSiblings",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_WithExplicitComponentsDir_UsesThatDirectory",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_WithExplicitTheme_UsesThatThemeFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSetGlobal_WithTemplateOverride_SucceedsWithoutDocFolderSiblings",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_WithTemplateOverride_SucceedsWithoutDocFolderSiblings",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DocCommand_EachPerDocumentSubcommand_ExposesOverrideFlags",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/DocCommandTests.cs": [
+      {
+        "method": "Create_ReturnsDocCommandWithSubcommands",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Create_WithSchemaParser_IncludesSchemaSubcommand",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteNew_Success_CallsCreateDocumentAndPrintsOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteNew_Failure_PrintsErrorAndReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteNew_WithoutOutputPath_PassesNullToService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteNew_WithScaffoldEmpty_PassesEmptyModeToService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteNew_WithInvalidScaffold_ReturnsErrorWithoutCallingService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteOutline_Success_PrintsNodesWithIds",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteOutline_Failure_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_ValidInputs_CallsAddNodeWithParsedJsonDictionary",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_InvalidJsonInputs_ReturnsErrorWithoutCallingService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_NullInputs_PassesEmptyDictionary",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteAdd_FailureFromService_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteRemove_Success_CallsRemoveNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteRemove_NodeNotFound_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_PlainStringValue_IsPassedAsString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_JsonNumberLiteralValue_IsParsedAsNumber",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_JsonBoolLiteralValue_IsParsedAsBool",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_SetImageAndKeyValue_Conflict_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_SetImageOnly_CallsSetNodeInputWithFromFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_SetImageMissingEquals_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_NeitherKeyValueNorSetImage_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSet_Failure_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSetGlobal_Success_CallsSetGlobalInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSetGlobal_NumericLiteral_CoercedToNumber",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSetGlobal_Failure_ReturnsNonZero",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/DocSchemaCommandTests.cs": [
+      {
+        "method": "ExecuteSchema_Default_EmitsYamlFrontmatterWithTemplateFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_JsonFlag_EmitsCamelCaseJsonDocumentTemplateSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubDefault_EmitsDocumentInputTaggedBlock",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubDefault_UsesDeclaredDefaultsWhenPresent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubDefault_OmitsInputsKeyWhenTemplateHasNoInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubJsonFlag_EmitsLegacyJsonShape",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_StubJsonFlag_UsesEmptyValuesForTypesWithoutDefaults",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_NonexistentFile_ReturnsOneAndPrintsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_ParserThrows_ReturnsOneAndWritesErrorToStderr",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExecuteSchema_ParserReturnsNull_ReturnsOneWithErrorMessage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/InteractivePromptServiceTests.cs": [
+      {
+        "method": "PromptForInputs_StringInput_PromptsAndReturnsValue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_MultipleInputs_PromptsEach",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_ContentInput_ReadsMultipleLines",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_WithDefault_UsesDefaultOnEmptyInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_WithDefault_UsesProvidedValue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_BooleanInput_ParsesValue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_ColorInput_ReturnsString",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_DerivedLabel_FormatsHyphenatedName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PromptForInputs_CustomLabel_UsesLabel",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/PreviewCommandTests.cs": [
+      {
+        "method": "Execute_DocumentFile_RendersAndOpens",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_MissingFile_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NullOpener_DoesNotThrow",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_NoBuildFalse_CallsBuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_NoBuildTrue_SkipsBuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/ProgramTests.cs": [
+      {
+        "method": "BuildRootCommand_RegistersAllCommands",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildRootCommand_DocCommandHasAllSubcommands",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BuildRootCommand_HasDescription",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RootCommand_ValidateWithNonexistentFile_ReturnsOne",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/RenderCommandTests.cs": [
+      {
+        "method": "Execute_MissingFile_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_UnrecognisedExtension_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_CompilesToPdf",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComponentFile_PromptsAndRenders",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComponentFile_NoInputs_SkipsPrompting",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_CompilerThrows_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_NoBuildFalse_CallsBuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_NoBuildTrue_SkipsBuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComponentFile_NoBuildFalse_DoesNotCallBuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_NoOutputPath_WritesNextToSource",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComponentFile_NoOutputPath_WritesNextToSource",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_WithExplicitOutputPath_WritesToThatPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DefaultOutputPath_OverwritesExistingFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentFile_BuildRebuilds_CompilesFromTemp",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/SchemaFirstAuthoringEndToEndTests.cs": [
+      {
+        "method": "SchemaStub_ThenBatchAdd_InsertsNodeWithExpectedInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SchemaStub_WithUnknownInput_ValidateFailsWithCorrectError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BatchAdd_JsonFileWithRelativeImagePath_ResolvesAgainstJsonDirectory",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "BatchAdd_ThenBuild_PreservesDocIngestedImage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Services/BuildServicePdfRenderPipelineTests.cs": [
+      {
+        "method": "RenderDocumentToPdf_BuildsAndCompilesTempFile_ReturnsBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentToPdf_ForwardsContextToBuildService",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "RenderDocumentToPdf_BuildFailed_Throws",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Services/BuildServiceTests.cs": [
+      {
+        "method": "Build_HashMatches_SkipsRecomposition",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_CosmeticEditKeepsCanonicalHash_SkipsRebuild",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_HashDiffers_Recomposes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_NullHash_Recomposes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_MissingFile_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_WrongExtension_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_MissingTemplate_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_MissingTheme_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_ResultIncludesTempFilePath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_PreservesDocIngestedImages_InStateManifest",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_PreservesDocIngestedImages_InComposedBytes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_UpToDate_PreservesDocIngestedImagesInMemoryState",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_WithResolutionContext_UsesContextPaths_NotDocFolder",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_UpToDate_StillPrepareTempAndExtractImages",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Services/JsonOutputTests.cs": [
+      {
+        "method": "Options_SerialisesComponentSchema_WithCamelCasePropertyNames",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Options_SerialisesComponentSchema_WithIndentedOutput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Options_SerialisesComponentSchema_WithExplicitNullsForOptionalFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/Services/TempBuildServiceTests.cs": [
+      {
+        "method": "PrepareTempDirectory_CreatesTempDirAndCopiesFile",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "PrepareTempDirectory_StablePath_SameSourceProducesSameDir",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_FirstBuild_DecodesAllImages",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_NoChanges_SkipsDecoding",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_ChangedImage_ReDecodes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_RemovedImage_CleansUp",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "ExtractImages_MultipleManifestEntriesSameHash_CreatesMultipleFiles",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/TemplateCommandTests.cs": [
+      {
+        "method": "Show_WithLayout_RendersHeaderAndAsciiTree",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Show_WithLayoutAndInputsFlag_IncludesInlineSeededValues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Show_WithoutLayout_RendersDefaultLayoutNone",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Show_UnknownTemplateId_ExitsNonZeroAndReportsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Show_JsonFlag_EmitsStructuredEnvelope",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "CLI/test/ValidateCommandTests.cs": [
+      {
+        "method": "DetectFileType_ComponentFile_ReturnsComponent",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectFileType_DocumentTemplateFile_ReturnsDocumentTemplate",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectFileType_ThemeFile_ReturnsTheme",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectFileType_DocumentFile_ReturnsDocument",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectFileType_JsonFile_ReturnsNodeJson",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "DetectFileType_UnknownExtension_ReturnsNull",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_MissingFile_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_UnrecognisedExtension_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ValidComponent_ReportsStructure",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ValidDocumentTemplate_ReportsStructure",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ValidTheme_ReportsStructure",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ValidDocument_DeepValidationReportsStructureAndPasses",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithDanglingImageName_FlagsImageNotRegisteredWithNodeId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithValidImageName_DoesNotFlag",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithUnknownInput_ErrorMessageReferencesNodeId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ParserThrows_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_BothTemplateAndDocFlags_Rejected",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJsonWithoutContext_Rejected",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithDocFlag_Rejected",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_ComponentWithTemplateFlag_Rejected",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJson_ValidAgainstTemplate_Passes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJson_UnknownInput_CaughtWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJson_MissingRequiredInput_Caught",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJson_NestedChildError_PathAnnotated",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_NodeJson_MalformedJson_ReturnsError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithSchemaViolation_DeepValidationFails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Execute_DocumentWithTemplateOverride_UsesAllowedComponents",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ]
+  },
+  "agenttools": {
+    "AgentTools/test/CrossCutting/FailureCodeCoverageTests.cs": [
+      {
+        "method": "EveryToolFixtureCoversItsDocumentedFailureCodes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/CrossCutting/HappyPathEnvelopeTests.cs": [
+      {
+        "method": "HappyPath_ReturnsOkEnvelope",
+        "kind": "TestCaseSource",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 1
+      }
+    ],
+    "AgentTools/test/CrossCutting/PathProjectionTests.cs": [
+      {
+        "method": "AbsolutePath_RejectedWithOffendingPath",
+        "kind": "TestCaseSource",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 1
+      },
+      {
+        "method": "DotDotEscape_RejectedWithOffendingPath",
+        "kind": "TestCaseSource",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 1
+      }
+    ],
+    "AgentTools/test/Discovery/PathScopingRegressionTests.cs": [
+      {
+        "method": "AddComponent_ImageInput_ResolvesViaProjectFs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "EditComponent_ImageInput_ResolvesViaProjectFs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "AddComponent_MissingImage_RejectsWithWorkspacePath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "CreateDocumentOutput_DefaultPath_IsInsideWorkspace",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "GetDocumentTemplates_EntryPaths_RootedUnderWorkspace",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "EveryPathTool_RejectsAbsoluteWithPathRejectedCode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/HarnessSmokeTests.cs": [
+      {
+        "method": "Build_ReturnsServiceProviderResolvingEveryAgentTool",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_RegistersDescriptorPerToolViaCatalogue",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SearchItemsTool_DescriptorRegisteredWithCorrectName",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "Build_RegistersShowTemplateAgentTool",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "SeededProject_VisibleViaMockFileSystem",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/AddComponentToolItemTests.cs": [
+      {
+        "method": "InvokeAsync_WithItem_HappyPath_PopulatesInputsFromItem",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ExplicitInputs_OverrideItemValues",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownItemId_ReturnsItemNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_IncompatibleItem_ReturnsItemIncompatible",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/AddComponentToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_End_AppendsAtRoot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_HappyPath_Start_PrependsAtRoot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_HappyPath_Before_InsertsBeforeReference",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_HappyPath_After_InsertsAfterReference",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownPosition_ReturnsPositionRequiredWithAlternatives",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BeforeOrAfterWithoutReferenceId_ReturnsPositionRequired",
+        "kind": "TestCase",
+        "rows": 2,
+        "testcase_attrs": 2,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BadParentId_ReturnsNodeNotFoundWithId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ComponentNotInTemplate_ReturnsComponentNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ChildNotAllowed_ReturnsChildNotAllowed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownInputKey_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TypeMismatch_ReturnsInputTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_DocumentTemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/CreateDocumentOutputToolTests.cs": [
+      {
+        "method": "InvokeAsync_DefaultOutputPath_WritesPdfNextToSource",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ExplicitOutputPath_WritesPdfThere",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_PipelineThrows_ReturnsRenderFailedWithExceptionMessage",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/CreateDocumentToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_WritesDocumentInsideWorkspace",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_EmptyOutputPath_ReturnsOutputPathRequired",
+        "kind": "TestCase",
+        "rows": 2,
+        "testcase_attrs": 2,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownTemplate_ReturnsTemplateNotFoundWithId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ScaffoldEmpty_ProducesEmptyNodes",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_InvalidScaffold_ReturnsInvalidScaffoldModeError",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/DeleteComponentToolTests.cs": [
+      {
+        "method": "InvokeAsync_LeafNode_RemovesNode",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SubtreeWithDeleteChildren_RemovesEverything",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BadId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ParentWithChildrenWithoutFlag_ReturnsNodeHasChildren",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/EditComponentToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_UpdatesInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BadNodeId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownInput_ReturnsUnknownInputWithSnapshot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TypeMismatch_ReturnsInputTypeMismatchWithSnapshot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/EditDocumentToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_UpdatesGlobalInputs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownInput_ReturnsUnknownInputWithSnapshot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TypeMismatch_ReturnsInputTypeMismatchWithSnapshot",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetComponentDetailsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsComponentDetails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BadNodeId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetComponentTemplateDetailsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsParsedSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingFile_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnparseableFile_ReturnsParseFailed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetComponentTemplatesToolTests.cs": [
+      {
+        "method": "InvokeAsync_NoFilter_ReturnsSeededComponentsFromMockFs",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_FilteredByTemplate_ReturnsAllowedComponents",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_FilteredByMissingTemplate_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetDocumentDetailsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsDetails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetDocumentOutlineToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsOutline",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetDocumentTemplateDetailsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsDetails",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownTemplate_ReturnsTemplateNotFoundWithId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetDocumentTemplatesToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsProjectLocalEntries",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetDocumentsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsDocuments",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingFolder_ReturnsReadFailed",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_PreludeMissing_EmitsWarning",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/GetSchemaToolTests.cs": [
+      {
+        "method": "InvokeAsync_KnownSchema_ReturnsSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_KnownSchema_ReturnsInputShapeDetail",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownSchema_ReturnsSchemaNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SchemaCatalogueLoadedViaItemCatalogueSideEffect_ResolvesSchema",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/ListCollectionsToolTests.cs": [
+      {
+        "method": "InvokeAsync_ReturnsLoadedCollections_WithCounts",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_NoCollectionsLoaded_ReturnsEmptyList",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ReportsSchemasPresentInCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_ReportsUniqueTagsPresentInCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SchemasAndTags_AreOrdinalSorted",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/ListItemsToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsItemSummaries",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TagFilter_NarrowsResultSet",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SchemaFilter_NarrowsResultSet",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownCollection_ReturnsCollectionNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_DoesNotIncludeContentBlocksInResponse",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/PatchContentToolTests.cs": [
+      {
+        "method": "InvokeAsync_Replace_ReplacesLineRange",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_Delete_RemovesLineRange",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_InsertBefore_InsertsLines",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_Append_AppendsLines",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_BadNodeId_ReturnsNodeNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownInput_ReturnsUnknownInput",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_NonContentInput_ReturnsInputTypeMismatch",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_OverlappingPatches_ReturnsPatchOverlap",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_LineOutOfRange_ReturnsPatchLineOutOfRange",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/ReadItemToolTests.cs": [
+      {
+        "method": "InvokeAsync_DefaultsToHeadmatterOnly",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_WithNoContentFalse_IncludesContentMap",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownItemId_ReturnsItemNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/SearchDocumentToolTests.cs": [
+      {
+        "method": "InvokeAsync_SubstringMatch_ReturnsHit",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_RegexMatch_ReturnsHit",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_InvalidRegex_ReturnsInvalidRegex",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/SearchItemsToolTests.cs": [
+      {
+        "method": "InvokeAsync_CrossCollectionSearch_ReturnsBothCollections",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_CollectionScoped_OnlyReturnsHitsFromThatCollection",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_QueryMatchesId_HitIncludesIdInMatchedFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_QueryMatchesTags_HitIncludesTagsInMatchedFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_QueryMatchesStringInput_HitIncludesInputKeyInMatchedFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_QueryMatchesNonStringInput_ItemNotInHits",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_QueryMatchesContentBodyOnly_ItemNotInHits",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SearchContentTrue_MatchesContentBlockBody",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SearchContentTrue_ResponseDoesNotIncludeContentBodies",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TagPreFilter_OnlyReturnsItemsWithTagAndMatchingQuery",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_SchemaPreFilter_OnlyReturnsItemsWithSchemaAndMatchingQuery",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_CaseInsensitiveByDefault_MatchesRegardlessOfCase",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_CaseSensitiveTrue_DoesNotMatchWrongCase",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_RegexTrue_MatchesPatternAgainstId",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_EmptyQuery_ReturnsInvalidQuery",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_WhitespaceOnlyQuery_ReturnsInvalidQuery",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_InvalidRegex_ReturnsInvalidRegex",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownCollection_ReturnsCollectionNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_NoMatch_ReturnsEmptyHits",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MaxResultsExceeded_CapsResultsAndSignalsTruncation",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MultipleMatchedFields_EachAppearsOnceInMatchedFields",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/ShowTemplateToolTests.cs": [
+      {
+        "method": "InvokeAsync_KnownTemplateNoLayout_ReturnsNullLayoutAndNoneInFormatted",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateWithLayout_ReturnsStructuredLayoutAndAsciiTree",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_InputsFlag_AppendsInlineAnnotations",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_UnknownTemplate_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ],
+    "AgentTools/test/Tools/ValidateDocumentToolTests.cs": [
+      {
+        "method": "InvokeAsync_HappyPath_ReturnsReport",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_MissingDocument_ReturnsReadFailedWithPath",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      },
+      {
+        "method": "InvokeAsync_TemplateMissing_ReturnsTemplateNotFound",
+        "kind": "Test",
+        "rows": 1,
+        "testcase_attrs": 0,
+        "source_attrs": 0
+      }
+    ]
+  }
+}

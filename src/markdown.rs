@@ -476,4 +476,80 @@ mod tests {
         let input = "See[^1].\n\n[^1]: Note.";
         assert_eq!(convert(input), "See#footnote[Note.].");
     }
+
+    #[test]
+    fn markdown_to_typst_whitespace_only_is_empty() {
+        assert_eq!(convert("   \n  \n  "), "");
+    }
+
+    #[test]
+    fn markdown_to_typst_heading_preserves_inline_formatting() {
+        assert_eq!(convert("## Hello **world**"), "== Hello *world*");
+    }
+
+    #[test]
+    fn markdown_to_typst_italic_with_underscore() {
+        assert_eq!(convert("_italic text_"), "_italic text_");
+    }
+
+    #[test]
+    fn markdown_to_typst_nested_bold_in_italic() {
+        let result = convert("***bold and italic***");
+        assert!(result.contains('*'), "expected bold marker in {result:?}");
+        assert!(result.contains('_'), "expected italic marker in {result:?}");
+    }
+
+    #[test]
+    fn markdown_to_typst_link_with_formatted_text() {
+        assert_eq!(
+            convert("[**bold link**](https://example.com)"),
+            "#link(\"https://example.com\")[*bold link*]"
+        );
+    }
+
+    #[test]
+    fn markdown_to_typst_image_with_path() {
+        assert_eq!(
+            convert("![photo](assets/photo.jpg)"),
+            "#image(\"assets/photo.jpg\")"
+        );
+    }
+
+    #[test]
+    fn markdown_to_typst_list_preserves_inline_formatting() {
+        let result = convert("- **Bold item**\n- *Italic item*");
+        assert!(result.contains("- *Bold item*"), "got {result:?}");
+        assert!(result.contains("- _Italic item_"), "got {result:?}");
+    }
+
+    #[test]
+    fn markdown_to_typst_multiline_blockquote() {
+        let result = convert("> Line 1\n> Line 2");
+        assert!(result.contains("#quote(block: true)["), "got {result:?}");
+        assert!(result.contains("Line 1"), "got {result:?}");
+        assert!(result.contains("Line 2"), "got {result:?}");
+    }
+
+    #[test]
+    fn markdown_to_typst_table_with_alignment() {
+        let result = convert("| Left | Center | Right |\n|:-----|:------:|------:|\n| a | b | c |");
+        assert!(
+            result.contains("align: (left, center, right)"),
+            "got {result:?}"
+        );
+    }
+
+    #[test]
+    fn markdown_to_typst_mixed_document() {
+        let result = convert(
+            "# Title\n\nThis is a paragraph with **bold** and *italic* text.\n\n## Section\n\n- Item 1\n- Item 2\n\n> A quote\n\n```python\nx = 1\n```",
+        );
+        assert!(result.contains("= Title"), "got {result:?}");
+        assert!(result.contains("*bold*"), "got {result:?}");
+        assert!(result.contains("_italic_"), "got {result:?}");
+        assert!(result.contains("== Section"), "got {result:?}");
+        assert!(result.contains("- Item 1"), "got {result:?}");
+        assert!(result.contains("#quote(block: true)["), "got {result:?}");
+        assert!(result.contains("```python"), "got {result:?}");
+    }
 }
