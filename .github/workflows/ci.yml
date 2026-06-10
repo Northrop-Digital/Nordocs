@@ -61,7 +61,7 @@ jobs:
         run: cargo build --verbose
 
   coverage:
-    name: Coverage (tarpaulin >= 80%)
+    name: Coverage (tarpaulin)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
       - name: Install cargo-tarpaulin
         uses: taiki-e/install-action@cargo-tarpaulin
       # Thresholds, output formats, timeout and excludes come from tarpaulin.toml.
-      # The run fails if coverage drops below the configured fail-under (80%).
+      # The run fails if coverage drops below the configured fail-under.
       - name: Run coverage
         run: cargo tarpaulin
       - name: Upload coverage report
