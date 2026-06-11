@@ -1,0 +1,109 @@
+name: CI
+
+# Runs on every pull request (all branches) and on pushes to main.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancel superseded runs for the same ref so a fresh push doesn't queue behind
+# the work it replaces.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  lint:
+    name: Lint (fmt + clippy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Check formatting
+        run: cargo fmt --all --check
+      - name: Clippy (deny warnings)
+        run: cargo clippy --all-targets -- -D warnings
+
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Build
+        run: cargo build --all-targets --verbose
+      - name: Test
+        run: cargo test --verbose
+
+  msrv:
+    name: MSRV (1.89)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned MSRV toolchain
+        uses: dtolnay/rust-toolchain@1.89
+      - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Build on minimum supported Rust version
+        run: cargo build --verbose
+
+  coverage:
+    name: Coverage (tarpaulin)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          # Only write the cache from main; PR runs restore but never save.
+          # Avoids the intermittent Windows cache-save failure (a leftover MSVC
+          # vctip.exe locking target/ during tar) that fails the post-step even
+          # though build and tests passed.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Install cargo-tarpaulin
+        uses: taiki-e/install-action@cargo-tarpaulin
+      # Thresholds, output formats, timeout and excludes come from tarpaulin.toml.
+      # The run fails if coverage drops below the configured fail-under.
+      - name: Run coverage
+        run: cargo tarpaulin
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            lcov.info
+            tarpaulin-report.html
+          if-no-files-found: ignore
