@@ -513,6 +513,29 @@ mod tests {
     }
 
     #[test]
+    fn extract_image_blobs_decodes_payload_split_across_multiple_lines() {
+        use base64::Engine as _;
+        // 200 bytes encodes to a base64 payload longer than one line; split it so
+        // the decoder must reassemble multiple payload lines before decoding.
+        let original: Vec<u8> = (0..200u32).map(|i| (i % 251) as u8).collect();
+        let b64 = base64::engine::general_purpose::STANDARD.encode(&original);
+        let wrapped: String = b64
+            .as_bytes()
+            .chunks(76)
+            .map(|c| std::str::from_utf8(c).unwrap())
+            .collect::<Vec<_>>()
+            .join("\n");
+        let src = format!(
+            "/*===IMAGES-START===\n---largehash---\n{wrapped}\n---END---\n===IMAGES-END===*/\n"
+        );
+        let blobs = extract_image_blobs(&src).expect("multi-line blob decodes");
+        assert_eq!(
+            blobs.get("largehash").map(Vec::as_slice),
+            Some(original.as_slice())
+        );
+    }
+
+    #[test]
     fn extract_image_blobs_rejects_duplicate_hash() {
         let src = "/*===IMAGES-START===\n\
                    ---aaaa---\nAA==\n---END---\n\
@@ -615,6 +638,62 @@ mod tests {
         assert!(
             err.to_string().contains("prelude"),
             "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn parse_content_blocks_extracts_named_blocks_in_order() {
+        let body = "<!-- start: intro -->\nfirst\n<!-- end -->\n<!-- start: body -->\nsecond\n<!-- end -->\n";
+        let blocks = parse_content_blocks(body).expect("blocks parse");
+        assert_eq!(
+            blocks,
+            vec![
+                ("intro".to_string(), "first".to_string()),
+                ("body".to_string(), "second".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn parse_content_blocks_empty_body_yields_no_blocks() {
+        let blocks = parse_content_blocks("just some markdown, no markers\n").expect("parse");
+        assert!(blocks.is_empty());
+    }
+
+    #[test]
+    fn parse_tagged_block_normalises_crlf_line_endings() {
+        let block = "---\r\nlevel: 1\r\n---\r\n<!-- start: text -->\r\nHello\r\n<!-- end -->\r\n";
+        let (yaml, content) = parse_tagged_block(block).expect("tagged block parses");
+        assert_eq!(yaml, "level: 1");
+        assert_eq!(content, vec![("text".to_string(), "Hello".to_string())]);
+    }
+
+    #[test]
+    fn attr_value_reads_key_regardless_of_attribute_order() {
+        assert_eq!(
+            attr_value("componentId=\"heading\" instance=\"aaaa\"", "instance").as_deref(),
+            Some("aaaa")
+        );
+        assert_eq!(
+            attr_value("instance=\"aaaa\" componentId=\"heading\"", "instance").as_deref(),
+            Some("aaaa")
+        );
+    }
+
+    #[test]
+    fn parse_state_bare_component_without_input_block_has_empty_inputs() {
+        let src = "/*===STATE-START===\n\
+             {\n  \"templateId\": \"default\",\n  \"themeId\": \"th\",\n  \"nodes\": [\n    { \"id\": \"table-of-contents-1234\", \"type\": \"table-of-contents\" }\n  ]\n}\n\n\
+             <document-input>\n---\ntemplateId: default\n---\n</document-input>\n\
+             ===STATE-END===*/\n\
+             // ===DOCUMENT-START===\n= Doc\n";
+        let state = parse_state(src).expect("state parses");
+        assert_eq!(state.nodes.len(), 1);
+        let toc = &state.nodes[0];
+        assert_eq!(toc.component_type, "table-of-contents");
+        assert!(
+            toc.inputs.is_empty(),
+            "a bare component with no <component-input> block round-trips with empty inputs"
         );
     }
 

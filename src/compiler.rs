@@ -102,6 +102,42 @@ mod tests {
     }
 
     #[test]
+    fn compile_to_pdf_image_or_placeholder_with_empty_name_renders_placeholder() {
+        // An empty name takes the placeholder branch (a dashed rect), so the
+        // source must compile to a PDF without touching any image asset.
+        let source = "#let image-or-placeholder(\n\
+              name,\n\
+              width: auto,\n\
+              height: auto,\n\
+              placeholder-width: auto,\n\
+              placeholder-height: auto,\n\
+              ..args,\n\
+            ) = {\n\
+              if name == none or name == \"\" {\n\
+                rect(\n\
+                  width: placeholder-width,\n\
+                  height: placeholder-height,\n\
+                  stroke: (dash: \"dashed\", paint: luma(180), thickness: 1pt),\n\
+                  radius: 12pt,\n\
+                )[\n\
+                  #align(center + horizon)[\n\
+                    #text(size: 10pt, fill: luma(150))[Photo]\n\
+                  ]\n\
+                ]\n\
+              } else {\n\
+                image(\"images/\" + name, width: width, height: height, ..args)\n\
+              }\n\
+            }\n\n\
+            #image-or-placeholder(\"\", placeholder-width: 4cm, placeholder-height: 6cm)\n";
+        let pdf = compile_to_pdf(source).expect("placeholder branch compiles to PDF");
+        assert!(
+            !pdf.is_empty(),
+            "placeholder render must produce non-empty PDF"
+        );
+        assert_eq!(&pdf[..5], b"%PDF-");
+    }
+
+    #[test]
     fn compile_to_pdf_export_error_maps_to_compile_error() {
         // PDF/UA-1 requires a document title. A plain document without
         // `#set document(title: ...)` fails at typst_pdf::pdf(), exercising

@@ -1494,3 +1494,25 @@ fn read_content(content_file: Option<&std::path::Path>) -> anyhow::Result<String
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::InputKind;
+    use std::collections::HashSet;
+
+    #[test]
+    fn coerce_boolean_value_parses_true_and_false_to_json_bool() {
+        let names = HashSet::new();
+        assert_eq!(
+            coerce_value(InputKind::Boolean, "true", &names).unwrap(),
+            serde_json::Value::Bool(true)
+        );
+        assert_eq!(
+            coerce_value(InputKind::Boolean, "false", &names).unwrap(),
+            serde_json::Value::Bool(false)
+        );
+        coerce_value(InputKind::Boolean, "yes", &names)
+            .expect_err("a non true/false value for a boolean input is rejected");
+    }
+}
