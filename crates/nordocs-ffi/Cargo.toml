@@ -1,0 +1,28 @@
+[package]
+name = "nordocs-ffi"
+description = "nordocs C-ABI / .NET FFI binding over nordocs-core (populated by the dotnet-ffi change)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# The cdylib is named `nordocs` so the produced artifact is `libnordocs.dylib`
+# / `libnordocs.so` / `nordocs.dll` — the single native library that replaces
+# the reference `libtypst_core.dylib`. The C# binding's `DllImport` name (and
+# the generator's `dll_name`) must stay in sync with this.
+[lib]
+name = "nordocs"
+crate-type = ["cdylib"]
+
+[dependencies]
+nordocs-core = { path = "../nordocs-core" }
+interoptopus.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+# C# binding generator; exercised by the binding-generation/parity step
+# (task group 5).
+interoptopus_backend_csharp.workspace = true
+# Temp dirs for the authoring/session round-trip smoke tests.
+tempfile.workspace = true

@@ -70,10 +70,12 @@ command — see `README.md` for the full flag/output reference.
 
 ```sh
 # Render & build
-ndoc render <file>            # compile .ncmp.typ / .ndoct.typ / .ndoc.typ to PDF (-o overrides)
-ndoc build <file>             # compile .md or .ndoc.typ to PDF
+ndoc render <file>            # compile .ncmp.typ / .ndoct.typ / .ndoc.typ to PDF/SVG/PNG (-o overrides; --format/--dpi/--merged)
+ndoc build <file>             # compile .md or .ndoc.typ to PDF/SVG/PNG (--format pdf|svg|png, --dpi <n> [144], --merged)
 ndoc validate <file>          # validate .ndoc.typ or .md; exits 1 with violations
-ndoc preview <file>           # render .ndoc.typ or .md to temp PDF and open in OS viewer
+ndoc preview <file>           # render .ndoc.typ or .md to temp PDF and open in OS viewer (PDF-only)
+# Format: -o extension wins, else --format, else pdf (a mismatch is an error).
+# SVG/PNG split a multi-page doc into <base>-1.<ext> … (bare <base>.<ext> when single-page); --merged writes one file.
 
 # Fat-file entry authoring
 ndoc new <path>               # create an empty .ndoc.typ document
@@ -95,6 +97,9 @@ ndoc template show <id|path>  # show a template's document inputs + permitted co
 ndoc item load <dir>          # summarise *.item.md collections
 ndoc item validate <dir>      # validate items against sibling *.ncmp.typ schemas (exits 1 on issues)
 ndoc image add <doc> <image>  # embed an image into a .ndoc.typ (deduped by blake3)
+
+# Diagnostics (hidden from `ndoc --help`)
+ndoc jump <file> --page <n> --at <x>,<y>   # map a page click back to its source location (source-mapping primitive)
 ```
 
 Set `NDOC_NO_OPEN=1` to skip viewer spawn in headless/CI environments (PDF is still
@@ -102,10 +107,17 @@ rendered and verified non-empty).
 
 ## Layout & where things go
 
-- `src/cli/`         — clap derive commands + dispatch. New commands go here.
+The project is a Cargo workspace of three crates under `crates/`:
+
+**`crates/nordocs-core/` (rlib `nordocs_core`)** — the binding-agnostic engine; no
+`clap`, no terminal output, no process/viewer side effects.
+
+- `src/service.rs`   — the binding-agnostic **service façade** (`core-api`):
+  structured-result compile/render/convert operations called by the CLI and the
+  FFI. New cross-binding operations go here.
 - `src/typst_world.rs` — the `typst::World` impl (highest-risk area; keep on the
   canonical typst API).
-- `src/compiler.rs`  — `.typ` -> PDF wrapper.
+- `src/compiler.rs`  — `.typ` -> PDF/SVG/PNG wrapper (the retained `CompiledDoc`).
 - `src/markdown.rs`  — Markdown -> Typst (comrak).
 - `src/fatfile/`     — compose/extract/hash of `.ndoc.typ` (STATE / TEMPLATE /
   DOCUMENT / IMAGES).
@@ -113,24 +125,41 @@ rendered and verified non-empty).
 - `src/schema/`      — component/template input schemas + catalogue.
 - `src/validation.rs` — schema-based validation for `.ndoc.typ` and `.md` documents.
 - `src/model.rs`     — shared domain types.
-- `tests/`           — integration tests.
+- `tests/`           — engine integration + snapshot tests.
+
+**`crates/nordocs-cli/` (binary `ndoc`)** — a thin adapter over the façade.
+
+- `src/cli/`         — clap derive commands + dispatch. New commands go here.
+- `src/main.rs`      — entrypoint shell (`mod cli;`, parse, dispatch, exit code).
+- `tests/cli.rs`     — `assert_cmd` E2E for the binary surface.
+
+**`crates/nordocs-ffi/` (cdylib)** — the .NET/C-ABI binding over the façade
+(interoptopus-annotated exports, panic-guarded boundary, generated C# bindings).
 
 ## Conventions
 
-- Errors: `thiserror` typed errors in `src/error.rs` for the library; `anyhow`
-  with context at the CLI/app boundary.
-- Keep `main.rs` a thin shell; real logic lives in library modules so it stays
-  testable.
-- The Typst version pins in `Cargo.toml` (`typst`, `typst-library`,
-  `typst-syntax`, `typst-pdf`, `typst-kit`, `typst-assets`) must move together.
+- Errors: `thiserror` typed errors in `crates/nordocs-core/src/error.rs` for the
+  library; `anyhow` with context at the CLI/app boundary.
+- Keep `main.rs` and the `cmd_*` handlers thin: engine logic lives in
+  `nordocs-core` (the `service` façade + modules) so it stays testable and is
+  reusable by the FFI.
+- The Typst version pins live in the root `[workspace.dependencies]` table
+  (`typst`, `typst-library`, `typst-syntax`, `typst-pdf`, `typst-svg`,
+  `typst-render`, `typst-ide`, `typst-kit`, `typst-assets`) and must move together.
 - Prefer snapshot tests (insta) for composed `.typ` output and CLI tests
   (assert_cmd) for the binary surface.
 
 ## Scope reminders (from the charter)
 
-v1 is CLI-first and **PDF-only**. Out of scope: GUI, non-PDF output, plugin
-system, and the AgentTools (MCP) programmatic surface (deferred). Do not build
-those unless explicitly asked.
+v1 is CLI-first and exports **PDF, SVG, and PNG** (`render`/`build`; `preview`
+stays PDF-only). It also exposes **`source-mapping`**: bidirectional
+click-to-source / cursor-to-preview over a retained compiled session
+(`CompiledDoc::jump_from_click` / `jump_from_cursor` plus page geometry). This is
+a *primitive* for downstream renderers (the .NET/FFI consumer), not an end-user
+feature — it comes from `typst-ide` walking the laid-out frame's spans, and SVG
+carries no source spans by itself. The hidden `ndoc jump` command exercises it.
+Out of scope: GUI, HTML export, plugin system, and the AgentTools (MCP)
+programmatic surface (deferred). Do not build those unless explicitly asked.
 
 The defining success measure is **correct end-to-end output** with fidelity at
 least equal to the C# tool.

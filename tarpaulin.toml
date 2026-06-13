@@ -1,6 +1,17 @@
+# Workspace-wide coverage. tarpaulin runs every member crate by default; the
+# aggregate line coverage must stay at or above `fail-under`.
 [default]
+workspace = true
 out = ["Html", "Lcov"]
 timeout = "300s"
 # Set to the current coverage floor; ratchet upward as test coverage improves.
-fail-under = 59.0
-exclude-files = ["src/main.rs", "src/authoring/mod.rs", "src/schema/mod.rs"]
+# Actual workspace coverage is ~90%; the floor leaves headroom for cross-platform
+# rasteriser variance in PNG paths.
+fail-under = 80.0
+exclude-files = [
+    "crates/nordocs-cli/src/main.rs",
+    "crates/nordocs-core/src/authoring/mod.rs",
+    "crates/nordocs-core/src/schema/mod.rs",
+    # cdylib FFI skeleton — populated (and covered) by the dotnet-ffi change.
+    "crates/nordocs-ffi/src/lib.rs",
+]
