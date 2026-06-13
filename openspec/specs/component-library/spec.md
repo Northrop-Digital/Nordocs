@@ -1,4 +1,9 @@
-## ADDED Requirements
+# component-library Specification
+
+## Purpose
+The component/template/item catalogue: discovery, input-schema introspection, and schema-driven validation of reusable `.ncmp.typ` / `.ndoct.typ` files and `*.item.md` collections.
+
+## Requirements
 
 ### Requirement: Component creation
 The system SHALL allow users to create named reusable components stored in a project-level catalogue.
