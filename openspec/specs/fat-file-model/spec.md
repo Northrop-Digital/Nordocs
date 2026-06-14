@@ -1,4 +1,9 @@
-## ADDED Requirements
+# fat-file-model Specification
+
+## Purpose
+The self-contained `.ndoc.typ` fat-file model: compose, extract, and content-hash of the STATE / TEMPLATE / DOCUMENT / IMAGES sections.
+
+## Requirements
 
 ### Requirement: Fat-file format structure
 The system SHALL use `.ndoc.typ` as the canonical fat-file format that composes all document sections — metadata, Markdown source, data, and Typst template — into a single file with delimited sections.

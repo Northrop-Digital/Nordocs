@@ -78,6 +78,24 @@ jobs:
       - name: Build on minimum supported Rust version
         run: cargo build --verbose
 
+  ffi-binding:
+    name: FFI binding freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      # Regenerate the C# P/Invoke binding from the live FFI inventory, then fail
+      # if it differs from the committed copy — the generated binding can never
+      # drift from the Rust surface without this job going red.
+      - name: Regenerate C# binding
+        run: cargo test -p nordocs-ffi generate_csharp_binding
+      - name: Fail if the committed binding is stale
+        run: git diff --exit-code -- crates/nordocs-ffi/bindings/NordocsFfi.g.cs
+
   coverage:
     name: Coverage (tarpaulin)
     runs-on: ubuntu-latest

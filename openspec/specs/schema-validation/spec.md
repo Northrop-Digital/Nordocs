@@ -1,4 +1,9 @@
-## ADDED Requirements
+# schema-validation Specification
+
+## Purpose
+Schema-driven validation of `.ndoc.typ` and `.md` documents and the shared `--json` result envelope reported to callers.
+
+## Requirements
 
 ### Requirement: Document structure validation command
 The system SHALL provide a `validate` command that checks a document's structure against its schema and reports all violations.

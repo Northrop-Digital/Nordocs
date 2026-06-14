@@ -1,20 +1,18 @@
-[package]
-name = "nordocs"
+[workspace]
+resolver = "2"
+members = ["crates/nordocs-core", "crates/nordocs-cli", "crates/nordocs-ffi"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.89"
-description = "Rust-native Typst document toolset: Markdown/data -> Typst -> PDF, single binary"
 license = "MIT OR Apache-2.0"
 publish = false
 
-[[bin]]
-name = "ndoc"
-path = "src/main.rs"
-
-[dependencies]
-# CLI
-clap = { version = "4", features = ["derive"] }
-
+# Shared dependency versions. Member crates opt in with `<dep>.workspace = true`.
+# The pinned typst 0.14 stack is declared here so the World impl, library,
+# syntax, fonts, PDF/SVG/PNG export and IDE jump support always agree.
+[workspace.dependencies]
 # Error handling
 anyhow = "1"
 thiserror = "2"
@@ -30,12 +28,14 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml_ng = "0.10"
 
-# Embedded Typst compiler stack.
-# Pinned together so the World impl, library, syntax, fonts and PDF export agree.
+# Embedded Typst compiler stack, pinned together.
 typst = "0.14"
 typst-library = "0.14"
 typst-syntax = "0.14"
 typst-pdf = "0.14"
+typst-svg = "0.14"
+typst-render = "0.14"
+typst-ide = "0.14"
 typst-kit = { version = "0.14", default-features = false, features = ["embed-fonts"] }
 typst-assets = { version = "0.14", features = ["fonts"] }
 comemo = "0.4"
@@ -43,7 +43,18 @@ comemo = "0.4"
 # Markdown -> Typst conversion (CommonMark + GFM, arena AST)
 comrak = "0.30"
 
-[dev-dependencies]
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# .NET / C-ABI FFI binding generator (Rust -> C# P/Invoke), consumed by
+# nordocs-ffi. interoptopus 0.16 requires rustc 1.93 and is skipped by the
+# resolver to honour the workspace rust-version (1.89); the 0.14 line resolves
+# cleanly on this toolchain. interoptopus_backend_csharp is the C# generator,
+# used by the binding-generation step.
+interoptopus = "0.14"
+interoptopus_backend_csharp = "0.14"
+
+# Dev / test
 insta = "1"
 assert_cmd = "2"
 predicates = "3"

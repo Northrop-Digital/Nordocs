@@ -5,8 +5,10 @@ brief; this file is the short version and inherits everything there.
 
 ## TL;DR
 
-- Rust crate `nordocs`, binary `ndoc`. Embeds the native Typst compiler;
-  Markdown/data → Typst → PDF via the `.ndoc.typ` fat-file model.
+- Cargo workspace: `nordocs-core` (rlib engine + `service` façade),
+  `nordocs-cli` (binary `ndoc`, thin adapter), `nordocs-ffi` (cdylib .NET
+  binding). Embeds the native Typst compiler; Markdown/data → Typst → PDF/SVG/PNG
+  via the `.ndoc.typ` fat-file model.
 - **Never touch `.reference/`** — read-only C# source to port from.
 - Keep `cargo build`, `cargo test`, and `cargo clippy` green.
 - v1 is CLI-first and PDF-only. No GUI / no MCP surface / no plugins yet.
