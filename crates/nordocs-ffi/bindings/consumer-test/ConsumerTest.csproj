@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Optional, toolchain-gated consumer round-trip (task 6.2). It loads the built
+    `nordocs` cdylib and exercises the C# bindings end-to-end. The Rust-side FFI
+    smoke tests in `nordocs-ffi` remain authoritative; this project is not part
+    of the cargo green gate and only runs where a .NET SDK is present.
+
+    Run with `run.sh`, which builds the cdylib path into `NordocsNativeLib`.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Targets net8.0 but rolls forward to whatever runtime major is installed
+         (e.g. .NET 10), so the gated test runs on any reasonably recent SDK. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>nordocs-consumer-test</AssemblyName>
+    <RootNamespace>Nordocs.Ffi.ConsumerTest</RootNamespace>
+    <!-- The shared binding sources live one directory up; compile them directly
+         rather than duplicating. -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../NordocsFfi.g.cs" />
+    <Compile Include="../NordocsSession.cs" />
+  </ItemGroup>
+
+  <!-- Copy the built native library next to the test assembly so the runtime's
+       DllImport("nordocs") resolves it. -->
+  <ItemGroup Condition="'$(NordocsNativeLib)' != '' And Exists('$(NordocsNativeLib)')">
+    <None Include="$(NordocsNativeLib)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+</Project>

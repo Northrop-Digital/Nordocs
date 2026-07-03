@@ -26,9 +26,27 @@ node-tree authoring, and component/item/template/image introspection. See
 - The self-contained **fat file** (`.ndoc.typ`): STATE / TEMPLATE / DOCUMENT /
   IMAGES in one file.
 - Document **validation** and **preview** before final build.
+- **Source mapping** (`source-mapping`): bidirectional click-to-source / cursor-to-preview
+  over a retained compiled session, for downstream renderers.
 
-Out of scope for v1: GUI, non-PDF output, a plugin system, and the AgentTools
-(MCP) programmatic surface (deferred).
+Out of scope for v1: GUI, a plugin system, and the AgentTools (MCP) programmatic
+surface (deferred).
+
+### Source mapping (`source-mapping`)
+
+A *primitive* for downstream renderers (the in-process .NET/FFI consumer, an
+editor preview), not an end-user feature. Given a compiled session, it maps a
+page click back to the Typst source location that produced the glyph
+(click-to-source) and a source cursor forward to the on-page positions it
+rendered to (cursor-to-preview), plus page geometry in points.
+
+This comes from `typst-ide`, which walks the laid-out page frame's spans — **it
+is not an SVG property**. The official SVG export carries no source spans by
+itself, so a renderer must keep the compiled session and query it by
+coordinate. Coordinates are page-local points (`pt`) from the page's top-left;
+a renderer at scale `s` (pixels per point) converts a pixel click with
+`point_pt = (px / s, py / s)` and picks the page explicitly. The hidden
+`ndoc jump` command (see Diagnostics) exercises this end-to-end.
 
 ## Build & run
 
@@ -63,10 +81,21 @@ actionable message (the JSON error envelope under `--json`).
 
 | Command | Accepts | Default output | Notes |
 |---------|---------|----------------|-------|
-| `ndoc render <input> [-o <out>]` | `.ncmp.typ`, `.ndoct.typ`, `.ndoc.typ` (never a bare `.typ`) | input with the recognised suffix replaced by `.pdf` | `-o`/`--output` overrides the path. `data: {"output": "<path>"}`. |
-| `ndoc build <input>` | `.md`, `.ndoc.typ` | input with extension replaced by `.pdf` (`.ndoc.typ` → `.pdf`) | Composes/converts then compiles. `data: {"output": "<path>"}`. |
+| `ndoc render <input> [-o <out>]` | `.ncmp.typ`, `.ndoct.typ`, `.ndoc.typ` (never a bare `.typ`) | input with the recognised suffix replaced by the format extension (`.pdf` by default) | `-o`/`--output` overrides the path; a recognised `.pdf`/`.svg`/`.png` extension also selects the format. `--format pdf\|svg\|png`, `--dpi <n>` (PNG resolution, default `144`), `--merged`. `data: {"output": "<path>", "outputs": ["<path>", ...]}`. |
+| `ndoc build <input>` | `.md`, `.ndoc.typ` | input with extension replaced by the format extension (`.pdf` by default) | Composes/converts then compiles. `--format pdf\|svg\|png`, `--dpi <n>` (default `144`), `--merged`. `data: {"output": "<path>", "outputs": ["<path>", ...]}`. |
 | `ndoc validate <input>` | `.ndoc.typ`, `.md` | — | Prints each violation as `location: message`; **exits 1** if any. `data: {"violations": [{"location","message"}]}`. |
-| `ndoc preview <input>` | `.ndoc.typ`, `.md` | temp PDF in the OS temp dir | Opens the OS default viewer. Set `NDOC_NO_OPEN=1` to skip the viewer (PDF still rendered + verified non-empty). `data: {"preview_path": "<path>"}`. |
+| `ndoc preview <input>` | `.ndoc.typ`, `.md` | temp PDF in the OS temp dir | Opens the OS default viewer. Set `NDOC_NO_OPEN=1` to skip the viewer (PDF still rendered + verified non-empty). `data: {"preview_path": "<path>"}`. **PDF-only by design.** |
+
+**Output format selection** (`render`/`build`): a recognised `-o` extension
+(`.pdf`/`.svg`/`.png`) wins; otherwise `--format`; otherwise `pdf`. A `-o`
+extension that disagrees with an explicit `--format` (e.g. `-o out.svg --format
+png`) is a hard error. `preview` is unaffected — it stays PDF-only.
+
+**Per-page naming** (SVG/PNG): PDF is always one file. For SVG/PNG, a single-page
+document writes the bare `<base>.<ext>`; a multi-page document writes one file
+per page, `<base>-1.<ext> … <base>-N.<ext>`. `--merged` instead writes a single
+combined `<base>.<ext>` (merged SVG canvas, or vertically stacked PNG). The
+chosen naming convention is printed unless `--json` is set.
 
 ### Fat-file entry authoring
 
@@ -97,6 +126,12 @@ actionable message (the JSON error envelope under `--json`).
 | `ndoc item load <dir>` | directory | Summarises `*.item.md` collections. `data: {"collections": [{"collection","items"}]}`. |
 | `ndoc item validate <dir>` | directory | Validates items against sibling `*.ncmp.typ` schemas; **exits 1** on any issue. `data: {"valid", "issues": [{"source","code","message"}]}`. |
 | `ndoc image add <doc> <image>` | `.ndoc.typ` doc + image file | Embeds the image (deduped by blake3); re-embedding identical content is a no-op. `data: {"name","hash","added"}`. |
+
+### Diagnostics
+
+| Command | Args / flags | Notes |
+|---------|--------------|-------|
+| `ndoc jump <input> --page <n> --at <x>,<y>` | `.typ`/`.ndoc.typ`/`.md` input; `--page` is 1-based (default `1`); `--at x,y` is a page-local point in `pt` | **Hidden** from `ndoc --help` (`ndoc jump --help` still works). Compiles the input and maps the click back to its source via the `source-mapping` primitive. Prints `file <path>:<line>:<column>`, a `url`, an on-page `position`, or "no jump target". `data: {"kind":"file","path","offset","line","column"}` / `{"kind":"url","url"}` / `{"kind":"position",...}` / `null` when nothing is hit. Audience is debugging / the FFI, not end users. |
 
 ### JSON envelope
 
@@ -139,6 +174,19 @@ fonts, so the single binary renders with zero system fonts) + `typst-pdf`.
 
 The reference C# implementation lives at `.reference/Typst` (not modified by
 this project).
+
+## .NET / FFI binding
+
+`crates/nordocs-ffi` builds a single native library (`libnordocs.dylib` /
+`libnordocs.so` / `nordocs.dll`) that exposes the engine over a C ABI, replacing
+both the reference's native `libtypst_core.dylib` and its managed `Common.Typst`
+engine. The C# P/Invoke binding (`crates/nordocs-ffi/bindings/NordocsFfi.g.cs`)
+is generated from the live FFI surface — regenerate with
+`cargo test -p nordocs-ffi generate_csharp_binding`; CI fails if it is stale. A
+hand-written `NordocsSession.cs` wraps the flat surface as idiomatic C#
+(`byte[]`/`string` results, exceptions, and an `IDisposable` session). See
+[`docs/ffi-packaging.md`](docs/ffi-packaging.md) for per-platform build and
+packaging instructions.
 
 ## License
 

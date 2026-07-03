@@ -1,7 +1,7 @@
 schema: spec-driven
 
 context: |
-  Tech stack: Rust 2021 (rust-version 1.85), single binary crate `nordocs`, binary name `ndoc`.
+  Tech stack: Rust 2021 (rust-version 1.85), Cargo workspace of three crates — `nordocs-core` (rlib engine + binding-agnostic service façade), `nordocs-cli` (binary `ndoc`, a thin adapter over the façade), and `nordocs-ffi` (cdylib, the .NET/C-ABI binding).
   CLI: clap 4 (derive macros).
   Typst integration: typst / typst-library / typst-syntax / typst-pdf / typst-kit / typst-assets, all version 0.14. The Typst compiler is embedded via a hand-rolled `typst::World` over an in-memory virtual FS — no external `typst` binary is ever spawned.
   Markdown: comrak 0.30 (GFM: CommonMark + tables, task lists, strikethrough, footnotes).
@@ -11,7 +11,7 @@ context: |
   Key conventions:
     - No `unwrap` outside `#[cfg(test)]` — library code must use `?` / typed errors.
     - Single binary: all Typst fonts are embedded via `typst-assets`; zero system-font dependency.
-    - v1 scope is CLI-first and PDF-only; GUI, non-PDF output, plugin system, and MCP surface are deferred.
+    - v1 scope is CLI-first and exports PDF, SVG, and PNG (`preview` stays PDF-only); GUI, HTML export, plugin system, and MCP surface are deferred.
     - `.reference/Typst` is read-only C# source to port from; never modify it.
 
 # Per-artifact rules (optional)
