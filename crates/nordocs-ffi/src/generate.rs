@@ -252,3 +252,24 @@ fn ffi_surface_covers_reference_interfaces() {
         }
     }
 }
+
+/// The C# method-name parser is exercised directly here so its contract is
+/// verified even where `.reference/` is absent (CI and fresh checkouts), where
+/// `ffi_surface_covers_reference_interfaces` skips the reference half.
+#[test]
+fn reference_method_names_keeps_only_pascal_case_declarations() {
+    let source = r#"public interface IExample
+{
+    /// <summary>Render like <c>image()</c>.</summary>
+    // Convert(source) inside a comment must be ignored
+    byte[] CompileToPdf(string source);
+    string Convert(string markdown);
+    void lowercaseHelper(int value);
+}"#;
+
+    let names = reference_method_names(source);
+
+    // PascalCase operations are kept; comment lines (including the XML-doc
+    // `image()` example) and the lowercase helper are dropped.
+    assert_eq!(names, vec!["CompileToPdf", "Convert"]);
+}

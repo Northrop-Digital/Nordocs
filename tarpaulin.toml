@@ -10,6 +10,13 @@ timeout = "300s"
 fail-under = 80.0
 exclude-files = [
     "crates/nordocs-cli/src/main.rs",
+    # CLI command dispatch. It is exercised exhaustively by the `tests/cli.rs`
+    # end-to-end suite, but only through `Command::cargo_bin("ndoc")`
+    # subprocesses — which tarpaulin's ptrace engine does not follow, so every
+    # dispatch line reads as uncovered here despite being tested. Excluded for
+    # the same reason as `main.rs`; with it in, aggregate coverage understates by
+    # ~12 points (the file is ~600 lines at ~1% visible coverage).
+    "crates/nordocs-cli/src/cli/mod.rs",
     "crates/nordocs-core/src/authoring/mod.rs",
     "crates/nordocs-core/src/schema/mod.rs",
     # cdylib FFI skeleton — populated (and covered) by the dotnet-ffi change.
