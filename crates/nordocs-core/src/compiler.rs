@@ -435,7 +435,19 @@ mod tests {
             svg.contains("</svg>"),
             "SVG must be a complete document with a closing tag"
         );
-        insta::assert_snapshot!("svg_single_page", svg);
+        // Typst derives each glyph's SVG id from `hash128(font, glyph_id)`, and a
+        // font hashes its *entire* byte content. Because the world resolves
+        // system fonts, the file backing the default family differs per host
+        // (same outline design, different bytes), so those ids are not portable —
+        // three machines produced three sets of ids for byte-identical `<path>`
+        // data. Redact the volatile ids so the snapshot still pins everything
+        // that is stable and meaningful: structure, glyph outlines, positions.
+        insta::with_settings!({filters => vec![
+            (r"#g[0-9A-F]+", "#g[HASH]"),
+            (r#"id="g[0-9A-F]+""#, r#"id="g[HASH]""#),
+        ]}, {
+            insta::assert_snapshot!("svg_single_page", svg);
+        });
     }
 
     #[test]

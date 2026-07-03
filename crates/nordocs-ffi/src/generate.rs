@@ -140,8 +140,15 @@ fn reference_method_names(source: &str) -> Vec<String> {
     names
 }
 
-/// Read a reference interface file from `.reference/src/`.
-fn read_reference(file: &str) -> String {
+/// Read a reference interface file from `.reference/src/`, or `None` when the
+/// reference tree is not present on disk.
+///
+/// The `.reference/` C# source is intentionally kept on disk but never tracked
+/// (see the repo `.gitignore`), so it is absent from every fresh checkout —
+/// including CI. A missing file therefore means "no reference to compare
+/// against", which callers skip; any *other* read error (e.g. a permissions
+/// problem on a tree that does exist) is still a hard failure.
+fn read_reference(file: &str) -> Option<String> {
     // CARGO_MANIFEST_DIR is `<repo>/crates/nordocs-ffi`; the reference tree is at
     // `<repo>/.reference/src`.
     let path = crate_dir()
@@ -150,7 +157,11 @@ fn read_reference(file: &str) -> String {
         .expect("repo root")
         .join(".reference/src")
         .join(file);
-    std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {}: {e}", path.display()))
+    match std::fs::read_to_string(&path) {
+        Ok(source) => Some(source),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
+        Err(e) => panic!("read {}: {e}", path.display()),
+    }
 }
 
 /// Parity test: every operation of the reference `ITypstCompiler`,
@@ -215,12 +226,24 @@ fn ffi_surface_covers_reference_interfaces() {
     // 2. Every operation declared in each reference interface is covered by the
     //    mapping — so a new reference method fails this test until it is mapped to
     //    an FFI export (or explicitly recorded as a divergence above).
+    //
+    //    This half needs the `.reference/` C# tree, which is untracked and thus
+    //    absent from CI and fresh checkouts (see `read_reference`). When it is
+    //    missing we skip parsing that interface rather than fail: the parity
+    //    check only runs where a developer has the reference on disk, while CI
+    //    still exercises Part 1. Skipping is announced so it is never silent.
     for iface in [
         "ITypstCompiler.cs",
         "IPreviewRenderer.cs",
         "IMarkdownToTypstConverter.cs",
     ] {
-        let source = read_reference(iface);
+        let Some(source) = read_reference(iface) else {
+            eprintln!(
+                "skipping reference parity for {iface}: .reference/ tree not present \
+                 (kept on disk, not tracked)"
+            );
+            continue;
+        };
         for method in reference_method_names(&source) {
             assert!(
                 mapping.iter().any(|(f, m, _)| *f == iface && *m == method),
